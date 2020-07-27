@@ -53,7 +53,9 @@ let write fname ?(options=default_options) m =
   Printf.printf "Wrote file %s\n" fname;
   close_out oc
   
-let view ?(options=default_options) ?(cmd="open -a Graphviz") m = 
-  let fname = "/tmp/" ^ m.Fsm.id ^ "_fsm.dot" in
+let view ?(options=default_options) ?(fname="") ?(cmd="open -a Graphviz") m = 
+  let fname = match fname with
+    | "" -> "/tmp/" ^ m.Fsm.id ^ "_fsm.dot"
+    | _ -> fname in
   let _ = write fname ~options m in
   Sys.command (cmd ^ " " ^ fname)

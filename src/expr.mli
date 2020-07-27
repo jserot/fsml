@@ -1,9 +1,11 @@
 (** Simple (int) expressions for FSMs *)
 
 type ident = string 
+  [@@deriving show {with_path=false}, yojson]
   (** The type of identifiers occuring in expressions *)
 
 type value = int 
+  [@@deriving show {with_path=false}, yojson]
   (** The type of expression values *)
 
 (** The type of expressions *)
@@ -11,6 +13,7 @@ type t =
   EConst of value            (** Constants *)   
 | EVar of ident              (** Input, output or local variable *)
 | EBinop of binop * t * t    (** Binary operation *)
+  [@@deriving show {with_path=false}, yojson]
 
 and binop = Plus | Minus | Mult | Div
 and relop = | Eq | NEq | Lt | Gt | Lte | Gte

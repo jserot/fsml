@@ -20,6 +20,13 @@ let f1 = {
 
 let _ = Dot.view f1
 
+(* Check serializing / deserializing fns *)
+      
+let f1' = f1 |> Fsm.to_string |> Fsm.from_string |> Dot.view ~fname:"/tmp/fsm_f1_bis.dot"
+let _ = f1 |> Fsm.to_file "/tmp/fsm_f1.json" 
+let f1'' = Fsm.from_file "/tmp/fsm_f1.json" 
+let _ = Dot.view ~fname:"/tmp/fsm_f1_ter.dot" f1''
+
 let f2 = {
     id="gensig";
     states=["E0"; "E1"];

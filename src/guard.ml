@@ -1,4 +1,5 @@
 type t = Expr.relop * Expr.t * Expr.t
+  [@@deriving show {with_path=false}, yojson]
 
 let eval env (op, id, exp) = (snd @@ List.assoc op Expr.relops) (Expr.lookup env id) (Expr.eval env exp)
 

@@ -1,2 +1,4 @@
 (library
-  (name newfsm))
+  (name newfsm)
+  (libraries yojson ppx_deriving_yojson.runtime)
+  (preprocess (pps ppx_deriving.show ppx_deriving_yojson)))

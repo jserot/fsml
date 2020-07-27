@@ -1,6 +1,8 @@
 type state = string
+  [@@deriving show {with_path=false}, yojson]
            
 type t = state * Guard.t list * Action.t list * state
+  [@@deriving show {with_path=false}, yojson]
 
 let string_of_guards guards = Misc.string_of_list ~f:Guard.to_string ~sep:"." guards
 

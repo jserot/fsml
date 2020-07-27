@@ -1,13 +1,16 @@
 (** Fsm expressions *)
 
 type ident = string 
+  [@@deriving show {with_path=false}, yojson]
 
 type value = int 
+  [@@deriving show {with_path=false}, yojson]
 
 type t = 
   EConst of value            (** Constants *)   
 | EVar of ident              (** Input, output or local variable *)
 | EBinop of binop * t * t    (** Binary operation *)
+  [@@deriving show {with_path=false}, yojson]
 
 and binop = Plus | Minus | Mult | Div
 
