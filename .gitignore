@@ -1,0 +1,14 @@
+_build/
+config
+config-stamp
+*.cmi
+*.cmo
+*.cma
+*.annot
+*.cmxa
+*~
+.depend
+.merlin
+CHANGELOG.html
+README.html
+attic/
