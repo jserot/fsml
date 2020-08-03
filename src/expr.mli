@@ -22,22 +22,22 @@ type env = (ident * value option) list
   
 exception Unknown of ident
 exception Unbound of ident
-exception Illegal_expr
+(* exception Illegal_expr *)
 
 val to_string: t -> string
-
-val of_string: string -> t
 
 val lookup: env -> ident -> value
 
 val eval: env -> t -> value
-
-val lexer: string -> Genlex.token Stream.t
-val parse: Genlex.token Stream.t -> t 
 
 val binops : (string * (binop * (int -> int -> int))) list
 val relops : (string * (relop * (int -> int -> bool))) list
 
 val string_of_binop: binop -> string
 val string_of_relop: relop -> string
+
+(* val lexer: string -> Genlex.token Stream.t
+ * val parse: Genlex.token Stream.t -> t  *)
+
+(* val of_string: string -> t *)
 

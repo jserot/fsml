@@ -73,3 +73,15 @@ let f3 = {
     }
 
 let _ = Dot.view f3
+
+(* With PPX-supported EDSL notation for transitions *)
+
+(* let f4 = {
+ *     id="mini";
+ *     states=["E0"; "E1"];
+ *     istate="E0", [];
+ *     vars=["k"];
+ *     trans=[
+ *     "E0", [%guard "start=1"] [ [%action "k:=0"]; [%action "s:=1"]], "E1"
+ *     ]
+ *     } *)

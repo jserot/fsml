@@ -18,9 +18,8 @@ and relop = | Eq | NEq | Lt | Gt | Lte | Gte
 
 type env = (ident * value option) list
 
-exception Unknown of ident
 exception Unbound of ident
-exception Illegal_expr
+exception Unknown of ident
 
 let lookup env id = 
   try
@@ -51,62 +50,6 @@ let rec eval : env -> t -> value = fun env exp ->
     EConst v -> v
   | EVar id -> lookup env id 
   | EBinop (op, exp1, exp2) -> (List.assoc op @@ List.map snd binops) (eval env exp1) (eval env exp2)
-
-(* Parsing *)
-
-(* BNF :
-   <exp>  ::= INT
-   | ID
-   | <exp> <op> <exp>
-   | '(' <exp> ')' <int>
-   <op>    ::= '+' | '-' | '*' | '/'
- *)
-
-let keywords = [
-    "+"; "-"; "*"; "/";
-    "="; "!="; "<"; ">"; "<="; ">=";
-    "("; ")"; ";"]
-
-let mk_binary_minus s = s |> String.split_on_char '-' |> String.concat " - "
-                      
-let lexer s = s |> mk_binary_minus |> Stream.of_string |> Genlex.make_lexer keywords 
-
-open Genlex
-   
-let rec p_exp0 s =
-  match Stream.next s with
-    | Int n -> EConst n
-    | Ident i -> EVar i
-    | Kwd "(" ->
-       let e = p_exp s in
-       begin match Stream.peek s with
-       | Some (Kwd ")") -> Stream.junk s; e
-       | _ -> raise Stream.Failure
-       end
-    | _ -> raise Stream.Failure
-
-and p_exp1 s =
-  let e1 = p_exp0 s in
-  p_exp2 e1 s
-  
-and p_exp2 e1 s =
-  match Stream.peek s with
-  | Some (Kwd "*") -> Stream.junk s; let e2 = p_exp1 s in EBinop(Mult, e1, e2)
-  | Some (Kwd "/") -> Stream.junk s; let e2 = p_exp1 s in EBinop(Div, e1, e2)
-  | _ -> e1
-  
-and p_exp s =
-  let e1 = p_exp1 s in p_exp3 e1 s
-                     
-and p_exp3 e1 s =
-  match Stream.peek s with
-  | Some (Kwd "+") -> Stream.junk s; let e2 = p_exp s in EBinop(Plus, e1, e2)
-  | Some (Kwd "-") -> Stream.junk s; let e2 = p_exp s in EBinop(Minus, e1, e2)
-  | _ -> e1
-
-let parse = p_exp
-
-let of_string s = s |> lexer |> p_exp
 
 let rec to_string e = match e with
     EConst c -> string_of_int c

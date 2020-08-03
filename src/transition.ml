@@ -18,6 +18,4 @@ let to_string ?(label_sep="/") ?(label_ldelim="") ?(label_rdelim="") (src,guards
     "" -> s0
   | _ -> s0 ^ " " ^ label_ldelim ^ s3 ^ label_rdelim
 
-let guards_of_string s = Misc.list_parse ~parse_item:Guard.parse ~sep:";" (Expr.lexer s)
-
-let conds_of_string s = Misc.list_parse ~parse_item:Action.parse ~sep:";" (Expr.lexer s)
+(* let guards_of_string s = Misc.list_parse ~parse_item:Guard.parse ~sep:";" (Expr.lexer s) *)
