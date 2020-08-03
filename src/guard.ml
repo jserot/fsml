@@ -1,6 +1,15 @@
-type t = Expr.relop * Expr.t * Expr.t
+type t = Expr.t
+  (* Note: ideally, this should be [bool Expr.t] where [t] is defined as a GADT.
+     Unfortunately, GADTs are not supported by most of [deriving] PPX extensions :(
+     See branch [gadt] for a preliminary attempt *)
   [@@deriving show {with_path=false}, yojson]
 
-let eval env (op, id, exp) = (snd @@ List.assoc op Expr.relops) (Expr.lookup env id) (Expr.eval env exp)
+exception Illegal_guard_expr of Expr.t
 
-let to_string (op, e1, e2) = Expr.to_string e1 ^ Expr.string_of_relop op ^ Expr.to_string e2 (* TODO: add parens *)
+let eval env exp =
+  match Expr.eval env exp with
+  | Bool b -> b
+  | Int _ -> raise (Illegal_guard_expr exp)
+  (* Note: this is typically this kind of runtime failure that GADTs can make impossible.. *)
+
+let to_string exp = Expr.to_string exp

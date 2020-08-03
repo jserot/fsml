@@ -4,18 +4,16 @@ type state = string
 type t = state * Guard.t list * Action.t list * state
   [@@deriving show {with_path=false}, yojson]
 
-let string_of_guards guards = Misc.string_of_list ~f:Guard.to_string ~sep:"." guards
-
-let string_of_actions actions = Misc.string_of_list ~f:Action.to_string ~sep:"," actions
-
-let to_string ?(label_sep="/") ?(label_ldelim="") ?(label_rdelim="") (src,guards,actions,dst) =
-  let s0 = src ^ " -> " ^ dst
-  and s3 = match string_of_guards guards, string_of_actions actions with
+let to_string (src,guards,actions,dst) =
+  let s0 = src ^ " -> " ^ dst in
+  let s1 = Misc.string_of_list ~f:Guard.to_string ~sep:"." guards in
+  let s2 = Misc.string_of_list ~f:Action.to_string ~sep:"," actions in
+  let s3 = match s1, s2 with
     | "", "" -> ""
     | s1, "" -> s1
-    | s1, s2 -> s1 ^ label_sep ^ s2 in
+    | s1, s2 -> s1 ^ "/" ^ s2 in
   match s3 with
     "" -> s0
-  | _ -> s0 ^ " " ^ label_ldelim ^ s3 ^ label_rdelim
+  | _ -> s0 ^ " [" ^ s3 ^ "]"
 
 (* let guards_of_string s = Misc.list_parse ~parse_item:Guard.parse ~sep:";" (Expr.lexer s) *)

@@ -4,37 +4,30 @@ type ident = string
   [@@deriving show {with_path=false}, yojson]
   (** The type of identifiers occuring in expressions *)
 
-type value = int 
+type value = 
+  | Int of int
+  | Bool of bool 
   [@@deriving show {with_path=false}, yojson]
-  (** The type of expression values *)
 
-(** The type of expressions *)
 type t = 
-  EConst of value            (** Constants *)   
-| EVar of ident              (** Input, output or local variable *)
-| EBinop of binop * t * t    (** Binary operation *)
+  EInt of int
+| EVar of ident             
+| EBinop of string * t * t
+| ERelop of string * t * t
   [@@deriving show {with_path=false}, yojson]
-
-and binop = Plus | Minus | Mult | Div
-and relop = | Eq | NEq | Lt | Gt | Lte | Gte
 
 type env = (ident * value option) list
   
 exception Unknown of ident
 exception Unbound of ident
-(* exception Illegal_expr *)
+exception Illegal_expr of t
 
 val to_string: t -> string
 
-val lookup: env -> ident -> value
-
 val eval: env -> t -> value
 
-val binops : (string * (binop * (int -> int -> int))) list
-val relops : (string * (relop * (int -> int -> bool))) list
-
-val string_of_binop: binop -> string
-val string_of_relop: relop -> string
+val binops : (string * (int -> int -> int)) list
+val relops : (string * (int -> int -> bool)) list
 
 (* val lexer: string -> Genlex.token Stream.t
  * val parse: Genlex.token Stream.t -> t  *)
