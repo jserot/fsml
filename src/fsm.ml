@@ -17,6 +17,11 @@ type t = {
   trans: Transition.t list
 } [@@deriving show {with_path=false}, yojson]
 
+(* Helping parsers *)
+
+let mk_guard s = Misc.list_parse ~parse_item:Guard.parse ~sep:"," (Expr.lexer s)
+let mk_action s = Misc.list_parse ~parse_item:Action.parse ~sep:"," (Expr.lexer s)
+
 (* Serializing/deserializing fns *)
        
 let to_string m =

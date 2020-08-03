@@ -29,8 +29,9 @@ val eval: env -> t -> value
 val binops : (string * (int -> int -> int)) list
 val relops : (string * (int -> int -> bool)) list
 
-(* val lexer: string -> Genlex.token Stream.t
- * val parse: Genlex.token Stream.t -> t  *)
+val lexer: string -> Genlex.token Stream.t
 
-(* val of_string: string -> t *)
+val parse: Genlex.token Stream.t -> t
+
+val of_string: string -> t
 

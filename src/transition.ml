@@ -15,5 +15,3 @@ let to_string (src,guards,actions,dst) =
   match s3 with
     "" -> s0
   | _ -> s0 ^ " [" ^ s3 ^ "]"
-
-(* let guards_of_string s = Misc.list_parse ~parse_item:Guard.parse ~sep:";" (Expr.lexer s) *)

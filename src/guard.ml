@@ -13,3 +13,7 @@ let eval env exp =
   (* Note: this is typically this kind of runtime failure that GADTs can make impossible.. *)
 
 let to_string exp = Expr.to_string exp
+
+let parse = Expr.parse
+
+let of_string = Expr.of_string

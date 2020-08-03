@@ -6,3 +6,6 @@ exception Illegal_guard_expr of Expr.t
 val eval: Expr.env -> Expr.t -> bool
 
 val to_string: Expr.t -> string
+
+val parse: Genlex.token Stream.t -> t
+val of_string: string -> Expr.t

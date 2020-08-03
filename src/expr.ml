@@ -74,3 +74,56 @@ let rec to_string e = match e with
   | EBinop (op,e1,e2) -> to_string e1 ^ op ^ to_string e2 (* TODO : add parens *)
   | ERelop (op,e1,e2) -> to_string e1 ^ op ^ to_string e2 (* TODO : add parens *)
 
+(* BNF :
+   <exp>  ::= INT
+   | ID
+   | <exp> <op> <exp>
+   | '(' <exp> ')' <int>
+   <op>    ::= '+' | '-' | '*' | '/' | '=' | ...
+ *)
+
+let keywords = List.map fst binops @ List.map fst relops @ ["("; ")"; ","; ":="]
+
+let mk_binary_minus s = s |> String.split_on_char '-' |> String.concat " - "
+                      
+let lexer s = s |> mk_binary_minus |> Stream.of_string |> Genlex.make_lexer keywords 
+
+open Genlex
+   
+let rec p_exp0 s =
+  match Stream.next s with
+    | Int n -> EInt n
+    | Ident i -> EVar i
+    | Kwd "(" ->
+       let e = p_exp s in
+       begin match Stream.peek s with
+       | Some (Kwd ")") -> Stream.junk s; e
+       | _ -> raise Stream.Failure
+       end
+    | _ -> raise Stream.Failure
+
+and p_exp1 s =
+  let e1 = p_exp0 s in
+  p_exp2 e1 s
+  
+and p_exp2 e1 s =
+  match Stream.peek s with
+  | Some (Kwd op) when List.mem_assoc op binops -> Stream.junk s; let e2 = p_exp1 s in EBinop(op, e1, e2)
+  | _ -> e1
+  
+(* Warning : no arithmetic operator precedence here ! *) 
+
+and p_exp3 e1 s =
+  match Stream.peek s with
+  | Some (Kwd op) when List.mem_assoc op relops -> Stream.junk s; let e2 = p_exp s in ERelop(op, e1, e2)
+  | _ -> e1
+
+and p_exp s =
+  let e1 = p_exp1 s in
+  p_exp3 e1 s
+
+let parse = p_exp
+
+let of_string s = s |> lexer |> p_exp
+
+
