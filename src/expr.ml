@@ -82,16 +82,15 @@ let rec to_string e = match e with
    <op>    ::= '+' | '-' | '*' | '/' | '=' | ...
  *)
 
-let keywords = List.map fst binops @ List.map fst relops @ ["("; ")"; ","; ":="]
+let keywords = List.map fst binops @ List.map fst relops @ ["("; ")"]
 
-let mk_binary_minus s = s |> String.split_on_char '-' |> String.concat " - "
+let lexer = Misc.lexer keywords
                       
-let lexer s = s |> mk_binary_minus |> Stream.of_string |> Genlex.make_lexer keywords 
-
 open Genlex
    
 let rec p_exp0 s =
   match Stream.next s with
+
     | Int n -> EInt n
     | Ident i -> EVar i
     | Kwd "(" ->

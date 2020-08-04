@@ -4,5 +4,7 @@ type t =
 
 val to_string: t -> string
 
+val keywords: string list
+
 val parse: Genlex.token Stream.t -> t
 val of_string: string -> t

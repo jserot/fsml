@@ -13,4 +13,9 @@ and p_act1 e1 s = match Stream.next s with
   | _ -> raise Stream.Failure
 
 let parse = p_act
-let of_string s = p_act (Expr.lexer s)
+
+let keywords = [":="]
+
+let lexer = Misc.lexer (Expr.keywords @ keywords)
+
+let of_string s = p_act (lexer s)

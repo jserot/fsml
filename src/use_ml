@@ -1,0 +1,21 @@
+#use "include_ml"
+
+let parse_int_list s = 
+  let p_int s = match Stream.next s with Genlex.Int n -> n | _ -> raise Stream.Failure in
+  let mk_stream s = s |> Stream.of_string |> Genlex.make_lexer [","] in
+  let ss = mk_stream s in
+  let r = Misc.list_parse ~parse_item:p_int ~sep:"," ss in
+  r, Stream.npeek 1 ss
+
+let _ = parse_int_list ""
+let _ = parse_int_list "1"
+let _ = parse_int_list "1,2"
+let _ = parse_int_list "1,2 end"
+
+let _ = Guard.of_string "start=1"
+let _ = Action.of_string "k:=0"
+let _ = Transition.of_string "S0 -> S1 when start=1"
+let _ = Transition.of_string "S0 -> S1 when start=1,c<2"
+let _ = Transition.of_string "S0 -> S1 with k:=0"
+let _ = Transition.of_string "S0 -> S1 when start=1 with k:=0"
+let _ = Transition.of_string "S0 -> S1 when start=1,c<2 with k:=0,c:=c+1"

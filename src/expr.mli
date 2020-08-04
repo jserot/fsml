@@ -26,10 +26,12 @@ val to_string: t -> string
 
 val eval: env -> t -> value
 
-val binops : (string * (int -> int -> int)) list
-val relops : (string * (int -> int -> bool)) list
+val binops: (string * (int -> int -> int)) list
+val relops: (string * (int -> int -> bool)) list
 
-val lexer: string -> Genlex.token Stream.t
+val keywords: string list
+
+(* val lexer: string -> Genlex.token Stream.t *)
 
 val parse: Genlex.token Stream.t -> t
 

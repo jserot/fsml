@@ -1,0 +1,16 @@
+#use "topfind";;
+#require "yojson";;
+#require "ppx_deriving.runtime";;
+#require "ppx_deriving_yojson.runtime";;
+#directory "../_build/default/src";;
+#directory "../_build/default/src/.newfsm.objs/byte";;
+#load "newfsm__Misc.cmo";;
+#load "newfsm__Expr.cmo";;
+#load "newfsm__Guard.cmo";;
+#load "newfsm__Action.cmo";;
+#load "newfsm__Transition.cmo";;
+#load "newfsm__Dot.cmo";;
+#load "newfsm__Fsm.cmo";;
+#load "newfsm.cmo";;
+
+open Newfsm

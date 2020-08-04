@@ -15,11 +15,14 @@ let list_parse ~parse_item ~sep s =
   | None ->
      []
  and parse_aux s =
-  match Stream.next s with
-  | Genlex.Kwd sep' ->
-     if sep=sep' then parse s else raise Stream.Failure
+  match Stream.peek s with
+  | Some (Genlex.Kwd sep') when sep=sep' ->
+     Stream.junk s;
+     parse s
   | _ ->
-     raise Stream.Failure
-  | exception Stream.Failure ->
      [] in
  parse s
+
+let mk_binary_minus s = s |> String.split_on_char '-' |> String.concat " - "
+
+let lexer keywords s = s |> mk_binary_minus |> Stream.of_string |> Genlex.make_lexer keywords 

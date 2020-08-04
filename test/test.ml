@@ -1,7 +1,28 @@
 open Newfsm
 open Fsm
-(* open Fsm.Action *)
-(* open Fsm.Expr *)
+
+(** Example 1 *)
+
+let f1_raw =
+    let open Action in
+    let open Expr in {
+    id="altbit";
+    states=["Init"; "E0"; "E1"];
+    istate="Init", [];
+    vars=[];
+    trans=[
+        "Init", [ERelop ("=", EVar "e", EInt 0)], [], "E0";
+        "Init", [ERelop ("=", EVar "e", EInt 1)], [], "E1";
+        "E0", [ERelop ("=", EVar "e", EInt 1)], [Assign ("s", EInt 0)], "E1";
+        "E0", [ERelop ("=", EVar "e", EInt 0)], [Assign ("s", EInt 1)], "E0";
+        "E1", [ERelop ("=", EVar "e", EInt 0)], [Assign ("s", EInt 0)], "E0";
+        "E1", [ERelop ("=", EVar "e", EInt 1)], [Assign ("s", EInt 1)], "E1";
+      ]
+    }
+
+let _ = Dot.view f1_raw
+
+(* The same FSM with a parsing helper *)
 
 let f1 = {
     id="altbit";
@@ -9,16 +30,34 @@ let f1 = {
     istate="Init", [];
     vars=[];
     trans=[
-        "Init", mk_guard "e=0", mk_action "", "E0";
-        "Init", mk_guard "e=1", mk_action "", "E1";
-        "E0", mk_guard "e=1", mk_action "s:=0", "E1";
-        "E0", mk_guard "e=0", mk_action "s:=1", "E0";
-        "E1", mk_guard "e=0", mk_action "s:=0", "E0";
-        "E1", mk_guard "e=1", mk_action "s:=1", "E1";
+        mk_trans "Init -> E0 when e=0";
+        mk_trans "Init -> E1 when e=1";
+        mk_trans "E0 -> E1 when e=1 with s:=0";
+        mk_trans "E0 -> E0 when e=0 with s:=1";
+        mk_trans "E1 -> E0 when e=0 with s:=0";
+        mk_trans "E1 -> E1 when e=1 with s:=1";
       ]
     }
 
 let _ = Dot.view f1
+
+(** Example 2 *)
+
+let f2_raw =
+    let open Action in
+    let open Expr in {
+    id="gensig";
+    states=["E0"; "E1"];
+    istate="E0", [];
+    vars=["k"];
+    trans=[
+    "E0", [ERelop ("=", EVar "start", EInt 1)],[Assign ("k", EInt 0); Assign ("s", EInt 1)], "E1";
+    "E1", [ERelop ("<", EVar "k", EVar "n")], [Assign ("k", EBinop ("+", EVar "k", EInt 1))], "E1";
+    "E1", [ERelop ("=", EVar "k", EVar "n")], [Assign ("s", EInt 0)], "E0"
+    ]
+    }
+
+(* Again, nicer this way : *)
 
 let f2 = {
     id="gensig";
@@ -26,9 +65,9 @@ let f2 = {
     istate="E0", [];
     vars=["k"];
     trans=[
-    "E0", mk_guard "start=1", mk_action "k:=0, s:=1", "E1";
-    "E1", mk_guard "k<4", mk_action "k:=k+1", "E1";
-    "E1", mk_guard "k=4", mk_action "s:=0", "E0";
+    mk_trans "E0 -> E1 when start=1 with k:=0, s:=1";
+    mk_trans "E1 -> E1 when k<4 with k:=k+1";
+    mk_trans "E1 -> E0 when k=4 with s:=0";
     ]
     }
 

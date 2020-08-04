@@ -6,4 +6,5 @@ type t = state * Guard.t list * Action.t list * state
 
 val to_string: t -> string
 
-(* val of_string: string -> t *)
+val parse: Genlex.token Stream.t -> t
+val of_string: string -> t
