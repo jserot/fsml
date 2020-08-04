@@ -8,3 +8,7 @@ val keywords: string list
 
 val parse: Genlex.token Stream.t -> t
 val of_string: string -> t
+
+(* Simulation *)
+
+val perform: Expr.env -> t -> Expr.env

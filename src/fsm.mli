@@ -29,3 +29,19 @@ val from_string: string -> t
 val to_file: fname:string -> t -> unit
   
 val from_file: fname:string -> t
+
+(* Simulation *)
+
+type event = Action.t list
+
+type clk = int
+
+type trace = clk * state * Expr.env 
+
+val run:
+  state:state ->
+  env:Expr.env ->
+  stim:event list ->
+  t ->
+  trace list
+

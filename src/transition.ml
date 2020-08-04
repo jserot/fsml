@@ -60,3 +60,9 @@ let lexer = Misc.lexer (Expr.keywords @ Guard.keywords @ Action.keywords @ ["whe
   (* Note: the "->" keyword is lexed as ["-"; ">"] here *)
 
 let of_string s = s |> lexer |> parse
+
+(* Simulation *)
+
+let is_fireable src env (src',guards,_,_) =
+       src = src'
+    && List.for_all (Guard.eval env) guards

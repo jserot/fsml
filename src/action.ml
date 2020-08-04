@@ -19,3 +19,9 @@ let keywords = [":="]
 let lexer = Misc.lexer (Expr.keywords @ keywords)
 
 let of_string s = p_act (lexer s)
+
+(* Simulation *)
+
+let perform env a = match a with
+  | Assign (id, expr) -> 
+     Expr.update_env env id (Expr.eval env expr)

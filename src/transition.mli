@@ -8,3 +8,5 @@ val to_string: t -> string
 
 val parse: Genlex.token Stream.t -> t
 val of_string: string -> t
+
+val is_fireable: state -> Expr.env -> t -> bool
