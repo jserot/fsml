@@ -24,3 +24,18 @@ let run ~state ~env ~stim m =
   eval (1, state, env, [0, state, env]) stim
 
 let mk_stim s = Stimuli.of_string s
+
+let rec env_diff env env' = match env, env' with
+| [], [] -> []
+| (k,v)::rest, (k',v')::rest' when k=k' -> if v=v' then env_diff rest rest' else (k',v') :: env_diff rest rest'
+| _, _ -> failwith "Simul.env_diff"
+
+let trace_diff (_,_,env) (clk',state',env') = (clk', state', env_diff env env')
+
+let filter_trace ts = 
+  let rec scan prev ts = match ts with
+    | [] -> []
+    | t::ts -> let t' = trace_diff prev t in  t' :: scan t ts in
+  match ts with 
+| [] -> []
+| t::ts -> t:: scan t ts 

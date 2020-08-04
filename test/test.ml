@@ -80,4 +80,4 @@ let _ =
     ~state:"E0"
     ~env:["start", Some (Int 0); "k", None; "s", None]
     ~stim:(Simul.mk_stim "*; start:=1; start:=0; *; *; *; *; *")
-    f2
+    f2 |> Simul.filter_trace

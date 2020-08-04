@@ -9,6 +9,10 @@ val run:
   Fsm.t ->
   trace list
 
+(* Post-processors *)
+
+val filter_trace: trace list -> trace list
+
 (* Helping parsers *)
 
 val mk_stim: string -> Events.t list
