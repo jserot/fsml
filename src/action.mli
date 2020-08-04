@@ -4,7 +4,7 @@ type t =
 
 val to_string: t -> string
 
-val keywords: string list
+val keywords: Lexing.Keywords.t
 
 val parse: Genlex.token Stream.t -> t
 val of_string: string -> t

@@ -56,8 +56,10 @@ let parse s =
   try p_trans0 s
   with Stream.Failure -> syntax_error s
 
-let lexer = Misc.lexer (Expr.keywords @ Guard.keywords @ Action.keywords @ ["when"; "with"; ","])
+let keywords = Lexing.Keywords.add (Lexing.Keywords.union Guard.keywords Action.keywords) ["when"; "with"; ","]
   (* Note: the "->" keyword is lexed as ["-"; ">"] here *)
+
+let lexer = Lexing.lexer keywords
 
 let of_string s = s |> lexer |> parse
 

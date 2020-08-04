@@ -7,7 +7,7 @@ val eval: Expr.env -> Expr.t -> bool
 
 val to_string: Expr.t -> string
 
-val keywords: string list
+val keywords: Lexing.Keywords.t
 
 val parse: Genlex.token Stream.t -> t
 val of_string: string -> Expr.t

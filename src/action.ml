@@ -14,9 +14,9 @@ and p_act1 e1 s = match Stream.next s with
 
 let parse = p_act
 
-let keywords = [":="]
+let keywords = Lexing.Keywords.add Expr.keywords [":="]
 
-let lexer = Misc.lexer (Expr.keywords @ keywords)
+let lexer = Lexing.lexer keywords
 
 let of_string s = p_act (lexer s)
 

@@ -73,24 +73,11 @@ let f2 = {
 
 let _ = Dot.view f2
 
-
-open Newfsm
-open Fsm
 open Expr
-open Action
-
-let ienv = ["start", Some (Int 0); "k", None; "s", None]
 
 let _ =
-  Fsm.run ~state:"E0" ~env:ienv
-    ~stim:[
-      [];
-      [Assign ("start", EInt 1)];
-      [Assign ("start", EInt 0)];
-      [];
-      [];
-      [];
-      [];
-      [];
-      ]
+  Simul.run
+    ~state:"E0"
+    ~env:["start", Some (Int 0); "k", None; "s", None]
+    ~stim:(Simul.mk_stim "*; start:=1; start:=0; *; *; *; *; *")
     f2

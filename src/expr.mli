@@ -32,7 +32,7 @@ val eval: env -> t -> value
 val binops: (string * (int -> int -> int)) list
 val relops: (string * (int -> int -> bool)) list
 
-val keywords: string list
+val keywords: Lexing.Keywords.t
 
 (* val lexer: string -> Genlex.token Stream.t *)
 

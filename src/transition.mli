@@ -6,6 +6,8 @@ type t = state * Guard.t list * Action.t list * state
 
 val to_string: t -> string
 
+val keywords: Lexing.Keywords.t
+
 val parse: Genlex.token Stream.t -> t
 val of_string: string -> t
 

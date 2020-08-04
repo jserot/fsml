@@ -88,15 +88,14 @@ let rec to_string e = match e with
    <op>    ::= '+' | '-' | '*' | '/' | '=' | ...
  *)
 
-let keywords = List.map fst binops @ List.map fst relops @ ["("; ")"]
+let keywords = List.map fst binops @ List.map fst relops @ ["("; ")"] |> Lexing.Keywords.make
 
-let lexer = Misc.lexer keywords
+let lexer = Lexing.lexer keywords
                       
 open Genlex
    
 let rec p_exp0 s =
   match Stream.next s with
-
     | Int n -> EInt n
     | Ident i -> EVar i
     | Kwd "(" ->

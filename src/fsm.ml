@@ -16,10 +16,6 @@ type t = {
   trans: Transition.t list
 } [@@deriving show {with_path=false}, yojson]
 
-(* Helping parsers *)
-
-let mk_trans s = Transition.of_string s
-
 (* Serializing/deserializing fns *)
        
 let to_string m =
@@ -39,29 +35,7 @@ let from_file ~fname =
     | Ok v -> v
     | Error _ -> Yojson.json_error "Fsm.from_string: invalid JSON file"
 
-(* Simulation *)
+(* Helping parsers *)
 
-type event = Action.t list
+let mk_trans s = Transition.of_string s
 
-type clk = int
-
-type trace = clk * state * Expr.env 
-
-let run ~state ~env ~stim m = 
-  let rec eval (clk, state, env, trace) stim =
-    match stim with
-    | [] -> List.rev trace (* Done ! *)
-    | st::rest ->
-       let env' = List.fold_left Action.perform env st in
-       let state', env'' = 
-         begin
-           match List.find_opt (Transition.is_fireable state env') m.trans with
-           | Some (_, _, acts, dst) -> 
-              dst,
-              List.fold_left Action.perform env' acts
-           | None ->
-              state,
-              env'
-         end in
-       eval (clk+1, state', env'', (clk, state', env'') :: trace) rest in
-  eval (1, state, env, [0, state, env]) stim

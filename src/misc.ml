@@ -23,6 +23,3 @@ let list_parse ~parse_item ~sep s =
      [] in
  parse s
 
-let mk_binary_minus s = s |> String.split_on_char '-' |> String.concat " - "
-
-let lexer keywords s = s |> mk_binary_minus |> Stream.of_string |> Genlex.make_lexer keywords 
