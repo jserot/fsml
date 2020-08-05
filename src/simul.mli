@@ -1,6 +1,6 @@
 type clk = int
 
-type trace = clk * Fsm.state * Expr.env 
+type trace = clk * Fsm.ctx 
 
 val run:
   state:Fsm.state ->

@@ -30,3 +30,12 @@ val to_file: fname:string -> t -> unit
   
 val from_file: fname:string -> t
 
+(* Simulation *)
+
+type ctx = {
+  state: state;
+  env: Expr.env
+  }
+
+val step: ctx -> t -> ctx
+

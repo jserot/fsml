@@ -74,6 +74,8 @@ let f2 = {
 let _ = Dot.view f2
 
 open Expr
+open Newfsm
+open Simul
 
 let _ =
   Simul.run

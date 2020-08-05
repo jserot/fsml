@@ -39,3 +39,18 @@ let from_file ~fname =
 
 let mk_trans s = Transition.of_string s
 
+(* Simulation *)
+
+type ctx = {
+  state: state;
+  env: Expr.env
+  }
+
+let step ctx m = 
+    match List.find_opt (Transition.is_fireable ctx.state ctx.env) m.trans with
+    | Some (_, _, acts, dst) -> 
+       { state = dst;
+         env = List.fold_left Action.perform ctx.env acts }
+    | None ->
+       ctx
+
