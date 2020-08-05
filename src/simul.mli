@@ -11,6 +11,15 @@ val run:
   Fsm.t ->
   trace list
 
+val compute:
+  ?istate:string -> (** Initial state (default: "Idle") *)
+  ?start:string ->  (** Start input signal (default: "start") *)
+  ?rdy:string ->    (** Rdy output signal (default: "rdy") *)
+  ?outps:string list -> (** Watched outputs (default: all declared) *)
+  Fsm.t ->        
+  (string * Expr.value) list ->  (** Input data *)
+  int * (string * Expr.value option) list    (** Final clock count and output values *)
+
 (* Post-processors *)
 
 val filter_trace: trace list -> trace list
