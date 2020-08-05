@@ -7,7 +7,7 @@ let p_events s = match Stream.peek s with
 
 let parse = p_events
 
-let keywords = Lexing.Keywords.add Action.keywords ["*"]
+let keywords = Lexing.Keywords.add Action.keywords ["*"; ","]
 
 let lexer = Lexing.lexer keywords
 

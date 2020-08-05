@@ -23,7 +23,7 @@ let _ =
   |> Simul.run
     ~state:"Idle"
     ~env:["start", Some (Int 0); "m", None; "n", None; "a", None; "b", None]
-    ~stim:(Simul.mk_stim "*; m:=12; n:=5; start:=1; start:=0; *; *; *; *; *")
+    ~stim:(Simul.mk_stim "*; m:=12, n:=5; start:=1; start:=0; *; *; *; *; *")
   |> Simul.filter_trace
   |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))
 
