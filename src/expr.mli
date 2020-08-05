@@ -17,6 +17,7 @@ type t =
   [@@deriving show {with_path=false}, yojson]
 
 type env = (ident * value option) list
+  [@@deriving show]
 
 val lookup_env: env -> ident -> value
 val update_env: env -> ident -> value -> env

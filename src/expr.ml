@@ -16,6 +16,7 @@ type t =
   [@@deriving show {with_path=false}, yojson]
 
 type env = (ident * value option) list
+  [@@deriving show]
 
 exception Unbound of ident
 exception Unknown of ident

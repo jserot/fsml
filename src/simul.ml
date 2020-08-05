@@ -1,8 +1,10 @@
 open Fsm
 
 type clk = int
+  [@@deriving show]
 
 type trace = clk * ctx 
+  [@@deriving show]
 
 let run ~state ~env ~stim m = 
   let rec eval (clk, ctx, trace) stim =

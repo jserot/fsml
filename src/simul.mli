@@ -1,6 +1,8 @@
 type clk = int
+  [@@deriving show]
 
 type trace = clk * Fsm.ctx 
+  [@@deriving show]
 
 val run:
   state:Fsm.state ->

@@ -1,7 +1,5 @@
 type state = string
   [@@deriving show {with_path=false}, yojson]
-type var = string
-  [@@deriving show {with_path=false}, yojson]
              
 module Expr = Expr
 module Guard = Guard
@@ -12,7 +10,9 @@ type t = {
   id: string;
   states: state list;
   istate: state * Action.t list;
-  vars: var list;
+  inps: string list;
+  outps: string list;
+  vars: string list;
   trans: Transition.t list
 } [@@deriving show {with_path=false}, yojson]
 
@@ -45,6 +45,7 @@ type ctx = {
   state: state;
   env: Expr.env
   }
+[@@deriving show]
 
 let step ctx m = 
     match List.find_opt (Transition.is_fireable ctx.state ctx.env) m.trans with
