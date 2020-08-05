@@ -5,6 +5,9 @@ let string_of_list ~f ~sep l =
     | x::xs -> f x ^ sep ^ h xs in
   h l
 
+let iter_fst f l =
+  ignore (List.fold_left (fun z x -> f z x; false) true l)
+
 let list_parse ~parse_item ~sep s =
  let rec parse s =
   match Stream.peek s with

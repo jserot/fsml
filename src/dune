@@ -1,5 +1,5 @@
 (library
   (name newfsm)
-  (modules misc lexing expr guard action transition dot events stimuli fsm simul)
+  (modules misc lexing expr guard action transition dot events stimuli fsm simul seqmodel c)
   (libraries yojson ppx_deriving_yojson.runtime)
   (preprocess (pps ppx_deriving.show ppx_deriving_yojson)))

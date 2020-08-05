@@ -30,3 +30,5 @@ let _ =
 let () = 
   let nclk, result = Simul.compute f3 ~outps:["r"] ["m", Int 36; "n", Int 24] in
   Printf.printf "** Got %s after %d clk cycles\n" (Expr.show_env result) nclk
+
+let () = C.write ~fname:"./c/fsm_pgcd" f3
