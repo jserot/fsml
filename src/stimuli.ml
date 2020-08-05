@@ -1,6 +1,8 @@
 type t = Events.t list
 
-let parse s = Misc.list_parse ~parse_item:Events.parse ~sep:";" s
+let parse s =
+  try Misc.list_parse ~parse_item:Events.parse ~sep:";" s
+  with Stream.Failure -> Lexing.syntax_error s
 
 let keywords = Lexing.Keywords.add Events.keywords [";"]
 

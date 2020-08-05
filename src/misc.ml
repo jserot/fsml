@@ -23,3 +23,7 @@ let list_parse ~parse_item ~sep s =
      [] in
  parse s
 
+let string_of_opt f = function
+| None -> ""
+| Some x -> f x
+

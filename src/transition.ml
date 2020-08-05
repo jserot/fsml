@@ -26,10 +26,6 @@ let to_string (src,guards,actions,dst) =
 
 open Genlex
 
-exception Syntax_error of Genlex.token option
-
-let syntax_error s = raise (Syntax_error (Stream.peek s))
-
 
 let rec p_trans0 s = 
   match Stream.npeek 4 s with
@@ -54,7 +50,7 @@ and p_trans2 s =
 
 let parse s =
   try p_trans0 s
-  with Stream.Failure -> syntax_error s
+  with Stream.Failure -> Lexing.syntax_error s
 
 let keywords = Lexing.Keywords.add (Lexing.Keywords.union Guard.keywords Action.keywords) ["when"; "with"; ","]
   (* Note: the "->" keyword is lexed as ["-"; ">"] here *)

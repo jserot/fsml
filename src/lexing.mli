@@ -10,3 +10,5 @@ end
 module Keywords : KEYWORDS
 
 val lexer: Keywords.t -> string -> Genlex.token Stream.t
+
+val syntax_error: Genlex.token Stream.t -> 'a
