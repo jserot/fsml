@@ -1,8 +1,6 @@
 open Newfsm
 open Fsm
 
-(** Example 1 *)
-
 let f1_raw =
     let open Action in
     let open Expr in {

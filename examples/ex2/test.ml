@@ -1,8 +1,6 @@
 open Newfsm
 open Fsm
 
-(** Example 2 *)
-
 let f2_raw =
     let open Action in
     let open Expr in {
@@ -47,4 +45,6 @@ let _ =
     ~state:"E0"
     ~env:["start", Some (Int 0); "k", None; "s", None]
     ~stim:(Simul.mk_stim "*; start:=1; start:=0; *; *; *; *; *")
-    f2 |> Simul.filter_trace
+    f2
+  |> Simul.filter_trace
+  |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))

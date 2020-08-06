@@ -13,10 +13,10 @@ config-stamp
 .merlin
 CHANGELOG.html
 README.html
-test/c/fsm_*.c
-test/c/fsm_*.h
-test/c/tb
-test/vhdl/tb
-test/vhdl/*.vcd
-test/vhdl/fsm_*.vhd
+examples/*/c/fsm_*.c
+examples/*/c/fsm_*.h
+examples/*/c/tb
+examples/*/vhdl/tb
+examples/*/vhdl/*.vcd
+examples/*/vhdl/fsm_*.vhd
 attic/
