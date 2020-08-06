@@ -15,7 +15,7 @@ let cfg = {
 exception Error of string * string   (* where, message *)
 
 let string_of_type t = match t with 
-  | Seqmodel.TyInt -> "int"
+  | Seqmodel.TyInt _ -> "int"
 
 let string_of_typed_item ?(ptr=false) (id,ty) = match ty with 
   | _ -> string_of_type ty ^ " " ^ (if ptr then "*" else "") ^ id

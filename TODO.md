@@ -1,3 +1,2 @@
 - sanity check 
-- `Fsm.Export.C`
-- `Fsm.Export.VHDL`
+- support for synchronous actions at the OCaml and C level

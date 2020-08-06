@@ -1,5 +1,7 @@
 type typ = 
-  | TyInt
+  | TyInt of int_range option
+
+and int_range = int * int
 
 type t = {
   m_name: string;
@@ -23,9 +25,9 @@ let make f =
     scan [] ts in
   { m_name = f.id;
     m_states = f.states;
-    m_inps = List.map (fun id -> id, TyInt) f.inps;
-    m_outps = List.map (fun id -> id, TyInt) f.outps;
-    m_vars = List.map (fun id -> id, TyInt) f.vars;
+    m_inps = List.map (fun id -> id, TyInt None) f.inps;
+    m_outps = List.map (fun id -> id, TyInt None) f.outps;
+    m_vars = List.map (fun id -> id, TyInt None) f.vars;
     m_init = f.istate;
     m_body = List.map (fun s -> s, List.filter (fun (s',_,_,_) -> s=s') f.trans) (srm_states f.trans)
     }

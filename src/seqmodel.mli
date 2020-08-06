@@ -1,7 +1,9 @@
 (* Sequential model (used by C and VHDL backends) *)
 
 type typ = 
-  | TyInt
+  | TyInt of int_range option
+
+and int_range = int * int
 
 type t = {
   m_name: string;

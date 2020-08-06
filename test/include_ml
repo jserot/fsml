@@ -17,6 +17,7 @@
 #load "newfsm__Simul.cmo";;
 #load "newfsm__Seqmodel.cmo";;
 #load "newfsm__C.cmo";;
+#load "newfsm__Vhdl.cmo";;
 #load "newfsm.cmo";;
 
 open Newfsm

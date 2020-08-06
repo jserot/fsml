@@ -37,6 +37,8 @@ let f2 = {
 
 let _ = Dot.view f2
 
+(* Let's simulate it *)
+
 open Expr
 open Newfsm
 

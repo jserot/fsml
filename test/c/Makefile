@@ -1,18 +1,19 @@
-all: test_fsm_pgcd
+all: tb
 
-test_fsm_pgcd: fsm_pgcd.o test_fsm_pgcd.o
-	gcc -o test_fsm_pgcd fsm_pgcd.o test_fsm_pgcd.o
-	./test_fsm_pgcd
+tb: fsm_pgcd.o tb.o
+	gcc -o tb fsm_pgcd.o tb.o
+	./tb
 
 fsm_pgcd.o: fsm_pgcd.h fsm_pgcd.c
 	gcc -c -I ../../etc/c fsm_pgcd.h fsm_pgcd.c
 
-test_fsm_pgcd.o: fsm_pgcd.h test_fsm_pgcd.c
-	gcc -c -I ../../etc/c test_fsm_pgcd.c
+tb.o: fsm_pgcd.h tb.c
+	gcc -c -I ../../etc/c tb.c
 
 clean: 
 	\rm -f *.o
-	\rm -f test_fsm_pgcd
+	\rm -f *.gch
+	\rm -f tb
 
 clobber: clean
 	\rm -f *~

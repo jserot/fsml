@@ -18,6 +18,8 @@ let f3 = {
 
 let _ = Dot.view f3
 
+(* Let's simulate it *)
+
 let _ =
   f3
   |> Simul.run
@@ -27,8 +29,13 @@ let _ =
   |> Simul.filter_trace
   |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))
 
+(* ... using a higher-level interface *)
+
 let () = 
   let nclk, result = Simul.compute f3 ~outps:["r"] ["m", Int 36; "n", Int 24] in
   Printf.printf "** Got %s after %d clk cycles\n" (Expr.show_env result) nclk
 
+(* Code generation *)
+
 let () = C.write ~fname:"./c/fsm_pgcd" f3
+let () = Vhdl.write ~fname:"./vhdl/fsm_pgcd" f3

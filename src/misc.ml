@@ -30,3 +30,4 @@ let string_of_opt f = function
 | None -> ""
 | Some x -> f x
 
+let rec bit_size n = if n=0 then 0 else 1 + bit_size (n/2)
