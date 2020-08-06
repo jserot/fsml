@@ -9,7 +9,7 @@ type config = {
 
 let cfg = {
   state_var_name = "state";
-  incl_file = "newfsm.h"
+  incl_file = "fsml.h"
   }
 
 exception Error of string * string   (* where, message *)

@@ -3,12 +3,8 @@
 all: build
 
 build:
-	dune build src/newfsm.cma
-	dune build src/newfsm.cmxa
-
-test:
-	dune build test/test.exe
-	dune exec test/test.exe
+	dune build src/fsml.cma
+	dune build src/fsml.cmxa
 
 clean:
 	dune clean

@@ -1,5 +1,5 @@
 (executable
  (name test)
  (modules test)
- (libraries newfsm yojson ppx_deriving_yojson.runtime)
+ (libraries fsml yojson ppx_deriving_yojson.runtime)
  (preprocess (pps ppx_deriving.show ppx_deriving_yojson)))

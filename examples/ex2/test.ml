@@ -1,4 +1,4 @@
-open Newfsm
+open Fsml
 open Fsm
 
 let f2_raw =
@@ -38,7 +38,7 @@ let _ = Dot.view f2
 (* Let's simulate it *)
 
 open Expr
-open Newfsm
+open Fsml
 
 let _ =
   Simul.run

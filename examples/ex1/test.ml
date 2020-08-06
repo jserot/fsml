@@ -1,4 +1,4 @@
-open Newfsm
+open Fsml
 open Fsm
 
 let f1_raw =

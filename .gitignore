@@ -9,6 +9,7 @@ config-stamp
 *~
 *.o
 *.cf
+*.gch
 .depend
 .merlin
 CHANGELOG.html
