@@ -1,4 +1,4 @@
-(* Sequential model (used by C and VHDL backends) *)
+(** {1 Sequential model (used by C and VHDL backends)} *)
 
 type typ = 
   | TyInt of int_range option
@@ -11,11 +11,8 @@ type t = {
   m_inps: (string * typ) list;
   m_outps: (string * typ) list;
   m_vars: (string * typ) list;  
-  m_init: Fsm.state * Action.t list;
-  m_body: (Fsm.state * Transition.t list) list; (* Transitions, indexed by source state *)
-     (* m_body = [case_1;...;case_n]
-       means
-        "while ( 1 ) { switch ( [state] ) { [case_1]; ...; [case_n] } }" *)
+  m_init: State.t * Action.t list; (** Initial transition *)
+  m_body: (State.t * Transition.t list) list; (** Transitions, indexed by source state *)
   }
 
 val make: Fsm.t -> t

@@ -1,15 +1,7 @@
-type state = string
-  [@@deriving show {with_path=false}, yojson]
-             
-module Expr = Expr
-module Guard = Guard
-module Action = Action
-module Transition = Transition
-            
 type t = {
   id: string;
-  states: state list;
-  istate: state * Action.t list;
+  states: State.t list;
+  itrans: State.t * Action.t list;
   inps: string list;
   outps: string list;
   vars: string list;
@@ -42,7 +34,7 @@ let mk_trans s = Transition.of_string s
 (* Simulation *)
 
 type ctx = {
-  state: state;
+  state: State.t;
   env: Expr.env
   }
 [@@deriving show]

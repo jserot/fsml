@@ -4,7 +4,7 @@ open Fsm
 let f3 = {
     id="pgcd";
     states=["Idle"; "Comp"];
-    istate="Idle", [Assign ("rdy", EInt 1)];
+    itrans="Idle", [Assign ("rdy", EInt 1)];
     inps=["start"; "m"; "n"];
     outps=["rdy"; "r"];
     vars=["a"; "b"];

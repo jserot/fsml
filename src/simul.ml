@@ -6,7 +6,7 @@ type clk = int
 type trace = clk * ctx 
   [@@deriving show]
 
-let run ~state ~env ~stim m = 
+let run ~ctx ~stim m = 
   let rec eval (clk, ctx, trace) stim =
     match stim with
     | [] -> List.rev trace (* Done ! *)
@@ -14,7 +14,6 @@ let run ~state ~env ~stim m =
        let ctx' = { ctx with env = List.fold_left Action.perform ctx.env st } in
        let ctx'' = Fsm.step ctx' m in
        eval (clk+1, ctx'', (clk, ctx'') :: trace) rest in
-  let ctx = { state = state; env = env } in
   eval (1, ctx, [0, ctx]) stim
 
 let mk_stim s = Stimuli.of_string s

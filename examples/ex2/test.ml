@@ -6,7 +6,7 @@ let f2_raw =
     let open Expr in {
     id="gensig";
     states=["E0"; "E1"];
-    istate="E0", [];
+    itrans="E0", [];
     inps=["start"];
     outps=["s"];
     vars=["k"];
@@ -22,7 +22,7 @@ let f2_raw =
 let f2 = {
     id="gensig";
     states=["E0"; "E1"];
-    istate="E0", [];
+    itrans="E0", [];
     inps=["start"];
     outps=["s"];
     vars=["k"];
@@ -42,8 +42,8 @@ open Fsml
 
 let _ =
   Simul.run
-    ~state:"E0"
-    ~env:["start", Some (Int 0); "k", None; "s", None]
+    ~ctx:{ state="E0";
+           env=["start", Some (Int 0); "k", None; "s", None] }
     ~stim:(Simul.mk_stim "*; start:=1; start:=0; *; *; *; *; *")
     f2
   |> Simul.filter_trace

@@ -1,3 +1,5 @@
+(** {1 Lexing helpers} *)
+
 module type KEYWORDS = 
 sig
   type t

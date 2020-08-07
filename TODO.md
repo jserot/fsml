@@ -1,2 +1,4 @@
+- typed IOs
 - sanity check 
+- Menhir-based parsing
 - support for synchronous actions at the OCaml and C level

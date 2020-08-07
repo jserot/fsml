@@ -1,5 +1,6 @@
 (library
   (name fsml)
-  (modules misc lexing expr guard action transition dot events stimuli fsm simul seqmodel c vhdl)
+  (public_name fsml)
+  (modules misc lexing expr state guard action transition dot events stimuli fsm simul seqmodel c vhdl)
   (libraries yojson ppx_deriving_yojson.runtime)
   (preprocess (pps ppx_deriving.show ppx_deriving_yojson)))

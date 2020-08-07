@@ -3,12 +3,12 @@
 open Printf
 
 type config = {
-  state_var_name: string;
-  incl_file: string
+  mutable state_var: string;
+  mutable incl_file: string
   }
 
 let cfg = {
-  state_var_name = "state";
+  state_var = "state";
   incl_file = "fsml.h"
   }
 
@@ -52,14 +52,14 @@ let dump_transition oc m tab is_first src (_,guards,acts,dst) =
   match guards with
   | [] ->
        List.iter (dump_action oc m tab) acts;
-       if dst <> src then fprintf oc "%s%s = %s;\n" tab cfg.state_var_name dst
+       if dst <> src then fprintf oc "%s%s = %s;\n" tab cfg.state_var dst
   | _  -> 
        fprintf oc "%s%sif ( %s ) {\n"
         tab
         (if is_first then "" else "else ")
         (Misc.string_of_list ~f:(string_of_guard m) ~sep:" && " guards);
        List.iter (dump_action oc m (tab ^ "  ")) acts;
-       if dst <> src then fprintf oc "%s  %s = %s;\n" tab cfg.state_var_name dst;
+       if dst <> src then fprintf oc "%s  %s = %s;\n" tab cfg.state_var dst;
        fprintf oc "%s  }\n" tab
 
 let dump_transitions oc m src after tss =
@@ -96,7 +96,7 @@ let dump_impl fname m =
   if List.length m.m_states > 1 then 
     fprintf oc "  static enum { %s } %s = %s;\n"
       (Misc.string_of_list ~f:Fun.id ~sep:", " m.m_states)
-      cfg.state_var_name
+      cfg.state_var
       (fst m.m_init);
   fprintf oc "  static int _init = 1;\n";
   fprintf oc "  if ( _init ) {\n";
@@ -107,7 +107,7 @@ let dump_impl fname m =
     [] -> () (* should not happen *)
   | [c] -> dump_state_case oc m c 
   | _ -> 
-      fprintf oc "  switch ( %s ) {\n" cfg.state_var_name;
+      fprintf oc "  switch ( %s ) {\n" cfg.state_var;
       List.iter (dump_state_case oc m) m.m_body;
       fprintf oc "    }\n"
   end;

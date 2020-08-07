@@ -6,7 +6,7 @@ let f1_raw =
     let open Expr in {
     id="altbit";
     states=["Init"; "E0"; "E1"];
-    istate="Init", [];
+    itrans="Init", [];
     inps=["e"];
     outps=["s"];
     vars=[];
@@ -27,7 +27,7 @@ let _ = Dot.view f1_raw
 let f1 = {
     id="altbit";
     states=["Init"; "E0"; "E1"];
-    istate="Init", [];
+    itrans="Init", [];
     inps=["e"];
     outps=["s"];
     vars=[];

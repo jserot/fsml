@@ -1,7 +1,4 @@
-type state = string
-  [@@deriving show {with_path=false}, yojson]
-           
-type t = state * Guard.t list * Action.t list * state
+type t = State.t * Guard.t list * Action.t list * State.t
   [@@deriving show {with_path=false}, yojson]
 
 let to_string (src,guards,actions,dst) =

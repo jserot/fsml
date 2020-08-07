@@ -1,11 +1,9 @@
-(* Dot output *)
-
 type options = {
-    node_shape: string;
-    node_style: string;
-    rankdir: string;
-    layout: string;
-    mindist: float
+    mutable node_shape: string;
+    mutable node_style: string;
+    mutable rankdir: string;
+    mutable layout: string;
+    mutable mindist: float
   }
 
 let default_options = {
@@ -66,7 +64,7 @@ let output oc ?(options=default_options) m =
       options.mindist;
     dump_istate ();
     List.iter dump_state m.states;
-    dump_itransition m.istate;
+    dump_itransition m.itrans;
     List.iter dump_transition m.trans;
     Printf.fprintf oc "}\n"
 

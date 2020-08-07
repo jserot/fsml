@@ -5,7 +5,6 @@ open Printf
 exception Error of string * string  (* where, msg *)
 
 type config = {
-  mutable enum_prefix: string;
   mutable state_var: string;
   mutable reset_sig: string;
   mutable clk_sig: string;
@@ -18,7 +17,6 @@ and act_semantics =  (** Interpretation of actions associated to transitions *)
   | Synchronous       (** synchronous (ex: [x:=x+1,y=x] with [x=1] gives [x=2,y=1]) *)
 
 let cfg = {
-  enum_prefix = "E_";
   state_var = "state";
   reset_sig = "rst";
   clk_sig = "clk";
