@@ -11,8 +11,6 @@ html: README.md
 
 doc: 
 	dune build @doc
-	rm -rf doc/lib
-	cp -r _build/default/_doc/_html doc/lib
 
 clean:
 	dune clean
