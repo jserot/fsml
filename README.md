@@ -56,7 +56,7 @@ let f = {
 
 Here is its graphical representation, obtained by evaluating `let _ = Dot.view f`:
 
-![](file:./doc/figs/genimp.png "")
+![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp.png "")
 
 
 Documentation
