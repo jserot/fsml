@@ -1,4 +1,4 @@
-.PHONY: test
+.PHONY: test doc
 
 all: build
 
@@ -8,6 +8,11 @@ build:
 
 html: README.md
 	pandoc -t html -o README.html README.md
+
+doc: 
+	dune build @doc
+	rm -rf doc/lib
+	cp -r _build/default/_doc/_html doc/lib
 
 clean:
 	dune clean
