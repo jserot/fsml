@@ -23,8 +23,8 @@ let _ = Dot.view f3
 let _ =
   f3
   |> Simul.run
-    ~state:"Idle"
-    ~env:["start", Some (Int 0); "m", None; "n", None; "a", None; "b", None]
+    ~ctx:{ state="Idle";
+           env=["start", Some (Int 0); "m", None; "n", None; "a", None; "b", None] }
     ~stim:(Simul.mk_stim "*; m:=12, n:=5; start:=1; start:=0; *; *; *; *; *")
   |> Simul.filter_trace
   |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))
@@ -32,8 +32,13 @@ let _ =
 (* ... using a higher-level interface *)
 
 let () = 
-  let nclk, result = Simul.compute f3 ~outps:["r"] ["m", Int 36; "n", Int 24] in
-  Printf.printf "** Got %s after %d clk cycles\n" (Expr.show_env result) nclk
+  let nclk, result =
+    f3 
+    |> Simul.compute
+         ~args:["m", Int 36; "n", Int 24]
+         ~results:["r"]
+   in
+   Printf.printf "** Got %s after %d clk cycles\n" (Expr.show_env result) nclk
 
 (* Code generation *)
 

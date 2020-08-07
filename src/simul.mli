@@ -23,12 +23,12 @@ val compute:
   ?istate:string (** Initial state (default: "Idle") *)
   -> ?start:string  (** Start input signal (default: "start") *)
   -> ?rdy:string    (** Rdy output signal (default: "rdy") *)
-  -> ?outps:string list (** Watched outputs (default: all declared) *)
+  -> args:(string * Expr.value) list  (** Input arguments *)
+  -> ?results:string list (** Results (default: all outputs) *)
   -> Fsm.t        
-  -> (string * Expr.value) list  (** Input arguments *)
   -> int * (string * Expr.value option) list 
   (**
-      [compute m args] is a special version of [run] dedicated to FSMs describing {i co-processing
+      [compute args m] is a special version of [run] dedicated to FSMs describing {i co-processing
       units}. The assumption is that such FSMs have
       - a pair of synchronizing signals, typically named [start] and [rdy]
       - a set of input arguments,
@@ -48,7 +48,7 @@ val compute:
 
       The name of of initial state, of the [start] and [rdy] signals can be modified using the optional 
       arguments [istate], [start] and [rdy] respectively.
-      By default, all outputs will be considered as results. The [outps] optional argument can be used to
+      By default, all outputs will be considered as results. The [results] optional argument can be used to
       modify this. *)
  
 (** {2 Post-processors} *)

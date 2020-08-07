@@ -6,6 +6,9 @@ build:
 	dune build src/fsml.cma
 	dune build src/fsml.cmxa
 
+html: README.md
+	pandoc -t html -o README.html README.md
+
 clean:
 	dune clean
 

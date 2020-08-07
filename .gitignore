@@ -21,3 +21,4 @@ examples/*/vhdl/tb
 examples/*/vhdl/*.vcd
 examples/*/vhdl/fsm_*.vhd
 attic/
+fsml.opam
