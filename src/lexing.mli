@@ -13,4 +13,6 @@ module Keywords : KEYWORDS
 
 val lexer: Keywords.t -> string -> Genlex.token Stream.t
 
+exception Syntax_error of string
+                        
 val syntax_error: Genlex.token Stream.t -> 'a

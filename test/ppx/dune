@@ -1,0 +1,10 @@
+(executable
+ (name test_ppx_fsm_trans)
+ (modules test_ppx_fsm_trans)
+ (libraries fsml)
+ (preprocess (pps ppx_deriving.show ppx_fsm_trans)))
+
+(executable
+ (name check_ppx_fsm_trans)
+ (modules check_ppx_fsm_trans)
+ (libraries fsml ppx_fsm_trans ppxlib))

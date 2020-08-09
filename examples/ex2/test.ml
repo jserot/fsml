@@ -27,9 +27,9 @@ let f2 = {
     outps=["s"];
     vars=["k"];
     trans=[
-    mk_trans "E0 -> E1 when start=1 with k:=0, s:=1";
-    mk_trans "E1 -> E1 when k<4 with k:=k+1";
-    mk_trans "E1 -> E0 when k=4 with s:=0";
+    [%fsm_trans "E0 -> E1 when start=1 with k:=0, s:=1"];
+    [%fsm_trans "E1 -> E1 when k<4 with k:=k+1"];
+    [%fsm_trans "E1 -> E0 when k=4 with s:=0"];
     ]
     }
 

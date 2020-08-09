@@ -8,6 +8,7 @@
 (homepage "http://github.com/jserot/fsml")
 (documentation "http://jserot.github.io/fsml")
 (using menhir 2.0)
+(allow_approximate_merlin)
 
 (package
   (name fsml)

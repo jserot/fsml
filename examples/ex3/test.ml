@@ -9,10 +9,10 @@ let f3 = {
     outps=["rdy"; "r"];
     vars=["a"; "b"];
     trans=[
-        mk_trans "Idle -> Comp when start=1 with a:=m, b:=n, rdy:=0";
-        mk_trans "Comp -> Comp when a<b with b:=b-a";
-        mk_trans "Comp -> Comp when a>b with a:=a-b";
-        mk_trans "Comp -> Idle when a=b with rdy:=1, r:=a";
+        [%fsm_trans "Idle -> Comp when start=1 with a:=m, b:=n, rdy:=0"];
+        [%fsm_trans "Comp -> Comp when a<b with b:=b-a"];
+        [%fsm_trans "Comp -> Comp when a>b with a:=a-b"];
+        [%fsm_trans "Comp -> Idle when a=b with rdy:=1, r:=a"];
       ]
     }
 
