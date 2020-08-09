@@ -12,13 +12,15 @@ and p_act1 e1 s = match Stream.next s with
   | Genlex.Kwd ":=" -> let e2 = Expr.parse s in Assign (e1, e2)
   | _ -> raise Stream.Failure
 
-let parse = p_act
+let parse s =
+  try p_act s
+  with Stream.Failure -> Lexing.syntax_error s
 
 let keywords = Lexing.Keywords.add Expr.keywords [":="]
 
 let lexer = Lexing.lexer keywords
 
-let of_string s = p_act (lexer s)
+let of_string s = parse (lexer s)
 
 (* Simulation *)
 
