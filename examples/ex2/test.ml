@@ -1,24 +1,6 @@
 open Fsml
 open Fsm
 
-let f2_raw =
-    let open Action in
-    let open Expr in {
-    id="gensig";
-    states=["E0"; "E1"];
-    itrans="E0", [];
-    inps=["start"];
-    outps=["s"];
-    vars=["k"];
-    trans=[
-    "E0", [ERelop ("=", EVar "start", EInt 1)],[Assign ("k", EInt 0); Assign ("s", EInt 1)], "E1";
-    "E1", [ERelop ("<", EVar "k", EVar "n")], [Assign ("k", EBinop ("+", EVar "k", EInt 1))], "E1";
-    "E1", [ERelop ("=", EVar "k", EVar "n")], [Assign ("s", EInt 0)], "E0"
-    ]
-    }
-
-(* Again, nicer this way : *)
-
 let f2 = {
     id="gensig";
     states=["E0"; "E1"];
@@ -44,7 +26,7 @@ let _ =
   Simul.run
     ~ctx:{ state="E0";
            env=["start", Some (Int 0); "k", None; "s", None] }
-    ~stim:(Simul.mk_stim "*; start:=1; start:=0; *; *; *; *; *")
+    ~stim:[%fsm_stim "*; start:=1; start:=0; *; *; *; *; *"]
     f2
   |> Simul.filter_trace
   |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))

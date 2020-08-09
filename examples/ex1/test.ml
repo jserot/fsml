@@ -1,29 +1,6 @@
 open Fsml
 open Fsm
 
-let f1_raw =
-    let open Action in
-    let open Expr in {
-    id="altbit";
-    states=["Init"; "E0"; "E1"];
-    itrans="Init", [];
-    inps=["e"];
-    outps=["s"];
-    vars=[];
-    trans=[
-        "Init", [ERelop ("=", EVar "e", EInt 0)], [], "E0";
-        "Init", [ERelop ("=", EVar "e", EInt 1)], [], "E1";
-        "E0", [ERelop ("=", EVar "e", EInt 1)], [Assign ("s", EInt 0)], "E1";
-        "E0", [ERelop ("=", EVar "e", EInt 0)], [Assign ("s", EInt 1)], "E0";
-        "E1", [ERelop ("=", EVar "e", EInt 0)], [Assign ("s", EInt 0)], "E0";
-        "E1", [ERelop ("=", EVar "e", EInt 1)], [Assign ("s", EInt 1)], "E1";
-      ]
-    }
-
-let _ = Dot.view f1_raw
-
-(* The same FSM with PPX-denoted transitions *)
-
 let f1 = {
     id="altbit";
     states=["Init"; "E0"; "E1"];
