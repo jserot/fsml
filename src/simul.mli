@@ -59,8 +59,7 @@ val filter_trace: trace list -> trace list
 
 (** {2 Helping parsers} *)
 
-val mk_stim: string -> Events.t list
-  (** [mk_stim s] builds a sequence stimuli from a string representation.
-      Example: [mk_stim "e:=1; e:=0,k:=1"] is
-      [[[Assign ("e", EInt 1)]; [Assign ("e", EInt 0); Assign ("k", EInt 1)]]].
-      Raises [Lexing.Syntax_error] (with the current lookahead token) if parsing fails. *)
+val mk_stim: string -> Events.t list  [@@deprecated "Use [%fsm_stim] PPX instead"]
+  (** [mk_stim] is a synonym for {!Stimuli.of_string}.
+      It builds a sequence stimuli from a string representation.
+      {b Deprecated}: Use [%fsm_stim s] PPX instead (with the same syntax for [s]). *)

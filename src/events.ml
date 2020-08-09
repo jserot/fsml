@@ -5,7 +5,9 @@ let p_events s = match Stream.peek s with
   | Some _  -> Misc.list_parse ~parse_item:Action.parse ~sep:"," s
   | _ -> raise Stream.Failure
 
-let parse = p_events
+let parse s =
+  try p_events s
+  with Stream.Failure -> Lexing.syntax_error s
 
 let keywords = Lexing.Keywords.add Action.keywords ["*"; ","]
 

@@ -11,14 +11,6 @@ type t = {
 } [@@deriving show {with_path=false}, yojson]
   (** The static description of a FSM *)
 
-(* {2 Helping parsers} *)
-
-val mk_trans: string -> Transition.t
-  (** [mk_trans s] builds a FSM transition from a string representation.
-      Example: [mk_trans "S1 -> S1 when c=0 with k:=1"] is
-      [("S1", [ERelop ("=", EVar "c", EInt 0)],[Assign ("k", EInt 1)], "E1")].
-      Raises [Lexing.Syntax_error] (with the current lookahead token) if parsing fails. *)
-
 (* { 2 Serializing/deserializing functions} *)
        
 val to_string: t -> string
@@ -49,4 +41,13 @@ val step: ctx -> t -> ctx
       value of the inputs and local variables. The actions associated to this transition
       are executed and both the state and context are updated accordingly.
       If no fireable transition is found, the context is left unchanged. *)
+
+(* {2 Helping parsers} *)
+
+val mk_trans: string -> Transition.t [@@deprecated "Use [%fsm_trans] PPX instead"]
+  (** [mk_trans] is a synomym for {! Transition.of_string}.
+
+      It builds a FSM transition from a string representation.
+
+      {b Deprecated}: Use [%fsm_trans] PPX instead. *)
 

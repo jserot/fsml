@@ -14,5 +14,7 @@ module Keywords : KEYWORDS
 val lexer: Keywords.t -> string -> Genlex.token Stream.t
 
 exception Syntax_error of string
+  (** Raised by explicit string parsers and PPX extensions. The argument gives the current lookahead token. *)
                         
 val syntax_error: Genlex.token Stream.t -> 'a
+  (** [syntax_error s] raises [Syntax_error], extracting the current lookahead token from stream [s]. *)
