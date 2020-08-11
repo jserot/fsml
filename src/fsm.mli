@@ -11,7 +11,7 @@ type t = {
 } [@@deriving show {with_path=false}, yojson]
   (** The static description of a FSM *)
 
-(* { 2 Serializing/deserializing functions} *)
+(* { 2 JSON export/import} *)
        
 val to_string: t -> string
   (** [to_string m] writes a representation of FSM [m] as a string using the [Yojson] library. *)
@@ -21,7 +21,7 @@ val from_string: string -> t
 
 val to_file: fname:string -> t -> unit
   (** [to_file f] writes a representation of FSM [m] in file [f] using the [Yojson] library. *)
-  
+    
 val from_file: fname:string -> t
   (** [from_file f] returns the FSM [m] stored in file [f] using the [Yojson] library *)
 
@@ -41,13 +41,3 @@ val step: ctx -> t -> ctx
       value of the inputs and local variables. The actions associated to this transition
       are executed and both the state and context are updated accordingly.
       If no fireable transition is found, the context is left unchanged. *)
-
-(* {2 Helping parsers} *)
-
-val mk_trans: string -> Transition.t [@@deprecated "Use [%fsm_trans] PPX instead"]
-  (** [mk_trans] is a synomym for {! Transition.of_string}.
-
-      It builds a FSM transition from a string representation.
-
-      {b Deprecated}: Use [%fsm_trans] PPX instead. *)
-

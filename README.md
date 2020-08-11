@@ -39,19 +39,18 @@ Here is the description of a simple FSM generating of fixed length impulsion on 
 whenever its output `start` is set to 1:
 
 ```
-let f = {
-    id="genimp";
-    states=["E0"; "E1"];
-    itrans="E0", [];
-    inps=["start"];
-    outps=["s"];
-    vars=["k"];
-    trans=[
-      [%fsm_trans "E0 -> E1 when start=1 with k:=0, s:=1"];
-      [%fsm_trans "E1 -> E1 when k<4 with k:=k+1"];
-      [%fsm_trans "E1 -> E0 when k=4 with s:=0"];
-      ]
-    }
+let f = [%fsm "
+    name: gensig;
+    states: E0, E1;
+    inputs: start;
+    outputs: s;
+    vars: k;
+    trans:
+      E0 -> E1 when start=1 with k:=0, s:=1;
+      E1 -> E1 when k<4 with k:=k+1;
+      E1 -> E0 when k=4 with s:=0;
+    itrans: -> E0;
+    "]
 ```
 
 Here is its graphical representation, obtained by evaluating `let _ = Dot.view f`:

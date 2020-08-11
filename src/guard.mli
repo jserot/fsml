@@ -5,13 +5,6 @@ type t = Expr.t
   (** The type of guards associated to transitions. 
       Guards are just boolean expressions. *)
 
-(** {2 Parsing} *)
-
-val keywords: Lexing.Keywords.t
-
-val parse: Genlex.token Stream.t -> t
-val of_string: string -> Expr.t
-
 (** {2 Printing} *)
 
 val to_string: Expr.t -> string

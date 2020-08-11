@@ -16,8 +16,6 @@ let run ~ctx ~stim m =
        eval (clk+1, ctx'', (clk, ctx'') :: trace) rest in
   eval (1, ctx, [0, ctx]) stim
 
-let mk_stim s = Stimuli.of_string s
-
 let rec env_diff env env' = match env, env' with
 | [], [] -> []
 | (k,v)::rest, (k',v')::rest' when k=k' -> if v=v' then env_diff rest rest' else (k',v') :: env_diff rest rest'

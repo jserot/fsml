@@ -56,10 +56,3 @@ val compute:
 val filter_trace: trace list -> trace list
   (** [filter_trace ts] modifies a sequence of trace by removing, from each inserted context,
       the fields which have not been modified wrt. the previous step. *)
-
-(** {2 Helping parsers} *)
-
-val mk_stim: string -> Events.t list  [@@deprecated "Use [%fsm_stim] PPX instead"]
-  (** [mk_stim] is a synonym for {!Stimuli.of_string}.
-      It builds a sequence stimuli from a string representation.
-      {b Deprecated}: Use [%fsm_stim s] PPX instead (with the same syntax for [s]). *)

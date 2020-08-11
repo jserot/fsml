@@ -9,13 +9,6 @@ type t =
 
 val to_string: t -> string
 
-(** {2 Parsing} *)
-
-val keywords: Lexing.Keywords.t
-
-val parse: Genlex.token Stream.t -> t
-val of_string: string -> t
-
 (** {2 Simulation} *)
 
 val perform: Expr.env -> t -> Expr.env
