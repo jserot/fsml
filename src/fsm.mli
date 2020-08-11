@@ -11,21 +11,19 @@ type t = {
 } [@@deriving show {with_path=false}, yojson]
   (** The static description of a FSM *)
 
-(* { 2 Serializing/deserializing functions} *)
+(* { 2 JSON export/import} *)
        
-module Json : sig
-  val to_string: t -> string
+val to_string: t -> string
   (** [to_string m] writes a representation of FSM [m] as a string using the [Yojson] library. *)
 
-  val from_string: string -> t
+val from_string: string -> t
   (** [from_string s] returns the FSM [m] stored in string [s] using the [Yojson] library *)
 
-  val to_file: fname:string -> t -> unit
+val to_file: fname:string -> t -> unit
   (** [to_file f] writes a representation of FSM [m] in file [f] using the [Yojson] library. *)
     
-  val from_file: fname:string -> t
-                                   (** [from_file f] returns the FSM [m] stored in file [f] using the [Yojson] library *)
-end
+val from_file: fname:string -> t
+  (** [from_file f] returns the FSM [m] stored in file [f] using the [Yojson] library *)
 
 (* {2 Simulation} *)
 

@@ -17,8 +17,6 @@ let keyword_table = [
    * "bool", TYBOOL; *)
   "when", WHEN;
   "with", WITH;
-  (* "true", TRUE;
-   * "false", FALSE; *)
 ]
 }
 

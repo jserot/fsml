@@ -9,10 +9,6 @@ type t =
 
 val to_string: t -> string
 
-(** {2 Parsing} *)
-
-(* val of_string: string -> (t, unit) result *)
-
 (** {2 Simulation} *)
 
 val perform: Expr.env -> t -> Expr.env

@@ -10,24 +10,22 @@ type t = {
 
 (* Serializing/deserializing fns *)
        
-module Json = struct 
-  let to_string m =
-    m |> to_yojson |> Yojson.Safe.to_string 
+let to_string m =
+  m |> to_yojson |> Yojson.Safe.to_string 
 
-  let from_string s = 
-    match Yojson.Safe.from_string s |> of_yojson with
-    | Ok v -> v
-    | Error _ -> Yojson.json_error "Fsm.from_string: invalid JSON string"
+let from_string s = 
+  match Yojson.Safe.from_string s |> of_yojson with
+  | Ok v -> v
+  | Error _ -> Yojson.json_error "Fsm.from_string: invalid JSON string"
 
-  let to_file ~fname m = 
-    m |> to_yojson |> Yojson.Safe.to_file fname;
-    Printf.printf "Wrote file %s\n" fname
-    
-  let from_file ~fname = 
-    match fname |> Yojson.Safe.from_file |> of_yojson with
-    | Ok v -> v
-    | Error _ -> Yojson.json_error "Fsm.from_string: invalid JSON file"
-end
+let to_file ~fname m = 
+  m |> to_yojson |> Yojson.Safe.to_file fname;
+  Printf.printf "Wrote file %s\n" fname
+  
+let from_file ~fname = 
+  match fname |> Yojson.Safe.from_file |> of_yojson with
+  | Ok v -> v
+  | Error _ -> Yojson.json_error "Fsm.from_string: invalid JSON file"
 
 (* Simulation *)
 

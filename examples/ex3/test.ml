@@ -1,20 +1,19 @@
 open Fsml
 open Fsm
 
-let f3 = {
-    id="pgcd";
-    states=["Idle"; "Comp"];
-    itrans="Idle", [[%fsm_action "rdy:=1"]];
-    inps=["start"; "m"; "n"];
-    outps=["rdy"; "r"];
-    vars=["a"; "b"];
-    trans=[
-        [%fsm_trans "Idle -> Comp when start=1 with a:=m, b:=n, rdy:=0"];
-        [%fsm_trans "Comp -> Comp when a<b with b:=b-a"];
-        [%fsm_trans "Comp -> Comp when a>b with a:=a-b"];
-        [%fsm_trans "Comp -> Idle when a=b with rdy:=1, r:=a"];
-      ]
-    }
+let f3 = [%fsm "
+    name: pgcd;
+    states: Idle, Comp;
+    inputs: start, m, n;
+    outputs: rdy, r;
+    vars: a, b;
+    trans:
+        Idle -> Comp when start=1 with a:=m, b:=n, rdy:=0;
+        Comp -> Comp when a<b with b:=b-a;
+        Comp -> Comp when a>b with a:=a-b;
+        Comp -> Idle when a=b with rdy:=1, r:=a;
+    itrans: -> Idle with rdy:=1;
+    "]
 
 let _ = Dot.view f3
 
