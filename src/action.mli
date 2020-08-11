@@ -11,10 +11,7 @@ val to_string: t -> string
 
 (** {2 Parsing} *)
 
-val keywords: Lexing.Keywords.t
-
-val parse: Genlex.token Stream.t -> t
-val of_string: string -> t
+(* val of_string: string -> (t, unit) result *)
 
 (** {2 Simulation} *)
 

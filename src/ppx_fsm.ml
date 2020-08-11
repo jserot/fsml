@@ -1,15 +1,15 @@
 open Ppxlib
 open Fsml
 
-let name = "fsm_stim"
+let name = "fsm"
          
 let expand ~loc ~path:_ (s:_) =
   let _ =
-    try Parse.stimuli s
+    try Parse.fsm s
     with Parse.Error (line,col,tok,msg) ->
       Location.raise_errorf ~loc "%s at line %d, col %d near token \"%s\"" msg line col tok in
   let e = Ast_builder.Default.estring ~loc s in
-  [%expr Parse.stimuli [%e e]]
+  [%expr Parse.fsm [%e e]]
 
 let ext =
   Extension.declare

@@ -12,13 +12,5 @@ let eval env exp =
   | Int _ -> raise (Illegal_guard_expr exp)
   (* Note: this is typically this kind of runtime failure that GADTs can make impossible.. *)
 
-let keywords = Expr.keywords  (* No specific keyword here *)
-
-let lexer = Lexing.lexer keywords
-
-let parse = Expr.parse
-
-let of_string s = parse (lexer s)
-
 let to_string exp = Expr.to_string exp
 

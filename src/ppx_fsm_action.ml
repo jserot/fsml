@@ -5,10 +5,11 @@ let name = "fsm_action"
          
 let expand ~loc ~path:_ (s:_) =
   let _ =
-    try Action.of_string s
-    with Lexing.Syntax_error s -> Location.raise_errorf ~loc "parse error near: \"%s\"" s in
+    try Parse.action s
+    with Parse.Error (line,col,tok,msg) ->
+      Location.raise_errorf ~loc "%s at line %d, col %d near token \"%s\"" msg line col tok in
   let e = Ast_builder.Default.estring ~loc s in
-  [%expr Action.of_string [%e e]]
+  [%expr Parse.action [%e e]]
 
 let ext =
   Extension.declare

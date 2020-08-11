@@ -1,0 +1,26 @@
+#use "topfind";;
+#require "yojson";;
+#require "ppx_deriving.runtime";;
+#require "ppx_deriving_yojson.runtime";;
+#directory "../../_build/default/src";;
+#directory "../../_build/default/src/.fsml.objs/byte";;
+#load "fsml__Misc.cmo";;
+#load "fsml__Mylexing.cmo";;
+#load "fsml__Expr.cmo";;
+#load "fsml__State.cmo";;
+#load "fsml__Guard.cmo";;
+#load "fsml__Action.cmo";;
+#load "fsml__Transition.cmo";;
+#load "fsml__Dot.cmo";;
+#load "fsml__Events.cmo";;
+#load "fsml__Stimuli.cmo";;
+#load "fsml__Fsm.cmo";;
+#load "fsml__Simul.cmo";;
+#load "fsml__Seqmodel.cmo";;
+#load "fsml__C.cmo";;
+#load "fsml__Vhdl.cmo";;
+#load "fsml__Fsm_parser.cmo";;
+#load "fsml__Fsm_lexer.cmo";;
+#load "fsml.cmo";;
+
+open Fsml

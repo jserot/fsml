@@ -1,0 +1,17 @@
+digraph {
+  "lib:fsml" [label="fsml"]
+  "lib:ppx_deriving_yojson.runtime" [label="ppx_deriving_yojson.runtime",style=filled]
+  "lib:ppx_fsm_action" [label="ppx_fsm_action"]
+  "lib:ppx_fsm_stim" [label="ppx_fsm_stim"]
+  "lib:ppx_fsm_trans" [label="ppx_fsm_trans"]
+  "lib:ppxlib" [label="ppxlib",style=filled]
+  "lib:yojson" [label="yojson",style=filled]
+  "lib:fsml" -> "lib:yojson"
+  "lib:fsml" -> "lib:ppx_deriving_yojson.runtime"
+  "lib:ppx_fsm_action" -> "lib:fsml"
+  "lib:ppx_fsm_action" -> "lib:ppxlib"
+  "lib:ppx_fsm_stim" -> "lib:fsml"
+  "lib:ppx_fsm_stim" -> "lib:ppxlib"
+  "lib:ppx_fsm_trans" -> "lib:fsml"
+  "lib:ppx_fsm_trans" -> "lib:ppxlib"
+}

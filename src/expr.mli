@@ -25,14 +25,6 @@ val binops: (string * (int -> int -> int)) list
 val relops: (string * (int -> int -> bool)) list
   (** ["="; "!="; "<"; ">"; ">="; "<="] *)
 
-(** {2 Parsing} *)
-
-val keywords: Lexing.Keywords.t
-
-val parse: Genlex.token Stream.t -> t
-
-val of_string: string -> t
-
 (** {2 Printing} *)
 
 val to_string: t -> string
