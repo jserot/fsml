@@ -1,6 +1,6 @@
 # Changes
 
-# 0.2 (Aug 11, 2020)
+# 0.2 (Aug XX, 2020)
 * Added [%fsm] PPX for fully scripted FSM description
 * All parsing now done with Menhir
 

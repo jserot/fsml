@@ -1,7 +1,7 @@
 open Fsml
 open Fsm
 
-let f3 = [%fsm "
+let f3 = [%fsm {|
     name: pgcd;
     states: Idle, Comp;
     inputs: start, m, n;
@@ -13,7 +13,7 @@ let f3 = [%fsm "
         Comp -> Comp when a>b with a:=a-b;
         Comp -> Idle when a=b with rdy:=1, r:=a;
     itrans: -> Idle with rdy:=1;
-    "]
+    |}]
 
 let _ = Dot.view f3
 
@@ -24,7 +24,7 @@ let _ =
   |> Simul.run
     ~ctx:{ state="Idle";
            env=["start", Some (Int 0); "m", None; "n", None; "a", None; "b", None] }
-    ~stim:[%fsm_stim "*; m:=12, n:=5; start:=1; start:=0; *; *; *; *; *"]
+    ~stim:[%fsm_stim {| *; m:=12, n:=5; start:=1; start:=0; *; *; *; *; * |}]
   |> Simul.filter_trace
   |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))
 

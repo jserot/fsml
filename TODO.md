@@ -1,4 +1,4 @@
-- factorize PPXs code
+- add precise column position when reporting PPX parse errors 
 - typed IOs
 - sanity check 
 - support for synchronous actions at the OCaml and C level

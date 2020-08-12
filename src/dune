@@ -12,35 +12,8 @@
   (modules fsm_parser))
 
 (library
- (name ppx_fsm_trans)
- (modules ppx_fsm_trans)
- (wrapped false)
- (kind ppx_rewriter)
- (libraries fsml ppxlib)
- (ppx_runtime_libraries fsml)
- (preprocess (pps ppxlib.metaquot)))
-
-(library
- (name ppx_fsm_action)
- (modules ppx_fsm_action)
- (wrapped false)
- (kind ppx_rewriter)
- (libraries fsml ppxlib)
- (ppx_runtime_libraries fsml)
- (preprocess (pps ppxlib.metaquot)))
-
-(library
- (name ppx_fsm_stim)
- (modules ppx_fsm_stim)
- (wrapped false)
- (kind ppx_rewriter)
- (libraries fsml ppxlib)
- (ppx_runtime_libraries fsml)
- (preprocess (pps ppxlib.metaquot)))
-
-(library
  (name ppx_fsm)
- (modules ppx_fsm)
+ (modules ppxs)
  (wrapped false)
  (kind ppx_rewriter)
  (libraries fsml ppxlib)

@@ -2,4 +2,4 @@
  (name test)
  (modules test)
  (libraries fsml yojson ppx_deriving_yojson.runtime)
- (preprocess (pps ppx_deriving.show ppx_deriving_yojson ppx_fsm_trans ppx_fsm_stim)))
+ (preprocess (pps ppx_deriving.show ppx_deriving_yojson)))
