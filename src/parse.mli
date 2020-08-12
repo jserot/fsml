@@ -1,6 +1,6 @@
 (** Interface to the Menhir parsers *)
 
-exception Error of int * int * string * string (* Line, column, token, message *)
+exception Error of int * int * string * string (* Line, char pos, token, message *)
   (** Raised when parsing PPX nodes *)
                  
 val action: string -> Action.t

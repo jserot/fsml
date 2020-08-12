@@ -6,8 +6,8 @@ let name = "fsm"
 let expand ~loc ~path:_ (s:_) =
   let _ =
     try Parse.fsm s
-    with Parse.Error (line,col,tok,msg) ->
-      Location.raise_errorf ~loc "%s at line %d, col %d near token \"%s\"" msg line col tok in
+    with Parse.Error (line,_,tok,msg) ->
+      Location.raise_errorf ~loc "%s at line %d near token \"%s\"" msg (loc.loc_start.pos_lnum+line) tok in
   let e = Ast_builder.Default.estring ~loc s in
   [%expr Parse.fsm [%e e]]
 

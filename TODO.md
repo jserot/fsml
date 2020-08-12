@@ -1,3 +1,4 @@
+- factorize PPXs code
 - typed IOs
 - sanity check 
 - support for synchronous actions at the OCaml and C level
