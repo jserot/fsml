@@ -3,11 +3,11 @@
 type t = {
   id: string;  (** Name *)
   states: State.t list;
+  inps: (string * Types.t) list;  (** Inputs *)
+  outps: (string * Types.t) list; (** Outputs *)
+  vars: (string * Types.t) list;  (** Local variables *)
+  trans: Transition.t list;
   itrans: State.t * Action.t list;  (** Initial transition *)
-  inps: string list;  (** Inputs *)
-  outps: string list; (** Outputs *)
-  vars: string list;  (** Local variables *)
-  trans: Transition.t list
 } [@@deriving show {with_path=false}, yojson]
   (** The static description of a FSM *)
 
@@ -25,7 +25,7 @@ val to_file: fname:string -> t -> unit
 val from_file: fname:string -> t
   (** [from_file f] returns the FSM [m] stored in file [f] using the [Yojson] library *)
 
-(* {2 Simulation} *)
+(** {2 Simulation} *)
 
 type ctx = {
   state: State.t;

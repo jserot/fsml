@@ -7,8 +7,10 @@
 %token TRANS
 %token ITRANS
 %token <int> INT
-(* %token TYBOOL
- * %token TYINT *)
+%token <bool> BOOL
+%token TYBOOL
+%token TYINT
+%token TYUINT
 %token <string> LID UID
 %token SEMICOLON
 %token COMMA
@@ -47,6 +49,11 @@
 
 %{
 open Fsm
+
+let mk_typed_expr e ty = let open Expr in { e_desc = e; e_typ = ty }
+let mk_int_expr e = mk_typed_expr e (Types.type_int ())
+let mk_bool_expr e = mk_typed_expr e Types.TyBool
+let mk_expr e = mk_typed_expr e (Types.TyVar (Types.new_type_var ()))
 %}
 
 %%
@@ -75,7 +82,7 @@ vars:
   | VARS COLON vars=terminated(separated_list(COMMA, iovar),SEMICOLON) { vars }
 
 iovar:
-  | id=LID { id }
+  | id=LID COLON ty=type_expr { id, ty }
 
 transition:
   | src=UID ARROW dst=UID guards=guards actions=actions
@@ -111,55 +118,63 @@ expr:
    * | e1 = expr LXOR e2 = expr
    *     { EBinop ("^", e1, e2) } *)
   | e1 = expr PLUS e2 = expr
-      { EBinop ("+", e1, e2) }
+      { mk_int_expr (EBinop ("+", e1, e2)) }
   | e1 = expr MINUS e2 = expr
-      { EBinop ("-", e1, e2) }
+      { mk_int_expr (EBinop ("-", e1, e2)) }
   | e1 = expr TIMES e2 = expr
-      { EBinop ("*", e1, e2) }
+      { mk_int_expr (EBinop ("*", e1, e2)) }
   | e1 = expr DIV e2 = expr
-      { EBinop ("/", e1, e2) }
+      { mk_int_expr (EBinop ("/", e1, e2)) }
   | e1 = expr EQUAL e2 = expr
-      { ERelop ("=", e1, e2) }
+      { mk_bool_expr (EBinop ("=", e1, e2)) }
   | e1 = expr NOTEQUAL e2 = expr
-      { ERelop ("!=", e1, e2) }
+      { mk_bool_expr (EBinop ("!=", e1, e2)) }
   | e1 = expr GT e2 = expr
-      { ERelop (">", e1, e2) }
+      { mk_bool_expr (EBinop (">", e1, e2)) }
   | e1 = expr LT e2 = expr
-      { ERelop ("<", e1, e2) }
+      { mk_bool_expr (EBinop ("<", e1, e2)) }
   | e1 = expr GTE e2 = expr
-      { ERelop (">=", e1, e2) }
+      { mk_bool_expr (EBinop (">=", e1, e2)) }
   | e1 = expr LTE e2 = expr
-      { ERelop ("<=", e1, e2) }
+      { mk_bool_expr (EBinop ("<=", e1, e2)) }
 
 simple_expr:
   | v = LID
-      { Expr.EVar v }
+      { mk_expr (Expr.EVar v) }
   | c = INT
-      { Expr.EInt c }
-  | MINUS c=INT { Expr.EInt (-c) }
+      { mk_int_expr (Expr.EInt c) }
+  | c = BOOL
+      { mk_bool_expr (Expr.EBool c) }
+  | MINUS c=INT
+      { mk_int_expr (Expr.EInt (-c)) }
   | LPAREN e = expr RPAREN
       { e }
 
 (* TYPE EXPRESSIONs *)
 
-(* type_expr:
- *   | TYINT a=int_annot { mk_type_expr (Type_expr.TEInt a) }
- *   | TYBOOL { mk_type_expr (Type_expr.TEBool) }
- * 
- * int_annot:
- *     | (\* Nothing *\)
- *       { TA_none }
- *     | LT sz=type_index_expr GT
- *         { TA_size sz }
- *     | LT lo=type_index_expr COLON hi=type_index_expr GT
- *         { TA_range (lo, hi) } *)
+type_expr:
+  | TYBOOL { Types.TyBool }
+  | TYINT sz=int_size { Types.TyInt (Types.TySigned, sz) }
+  | TYUINT sz=int_size { Types.TyInt (Types.TyUnsigned, sz) }
 
+int_size:
+  | (* Nothing *) { Types.SzVar (Types.new_size_var ()) }
+  | LT sz=INT GT { Types.SzConst sz }
 
-(* Event sets *)
+(* Simulation events *)
+
+value:
+  | v = INT
+      { Expr.Int v }
+  | v = BOOL
+      { Expr.Bool v }
+
+event:
+  | id=LID COLEQ v=value  { (id,v) }
 
 events:
   | TIMES { [] }
-  | events=separated_nonempty_list(COMMA, action) { events }
+  | events=separated_nonempty_list(COMMA, event) { events }
 
 (* Hooks to intermediate parsers *)
 

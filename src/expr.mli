@@ -4,38 +4,58 @@ type ident = string
   [@@deriving show {with_path=false}, yojson]
   (** The type of identifiers occuring in expressions *)
 
-type value = 
-  | Int of int
-  | Bool of bool 
+type t = {
+  e_desc: e_desc;
+  mutable e_typ: Types.t;
+  }
   [@@deriving show {with_path=false}, yojson]
 
-type t = 
+and e_desc = 
   EInt of int
+| EBool of bool
 | EVar of ident             
 | EBinop of string * t * t
-| ERelop of string * t * t
   [@@deriving show {with_path=false}, yojson]
 
-type env = (ident * value option) list
-  [@@deriving show]
-  (** Value [None] means [Undefined] *)
+type value = {
+  mutable v_desc: e_val;
+  mutable v_typ: Types.t;
+  }
+  [@@deriving show {with_path=false}]
 
-val binops: (string * (int -> int -> int)) list
-  (** ["+"; "-"; "*"; "/"] *)
-val relops: (string * (int -> int -> bool)) list
-  (** ["="; "!="; "<"; ">"; ">="; "<="] *)
+and e_val = 
+  | Int of int
+  | Bool of bool
+  | Prim of (e_val list -> e_val) 
+  | Unknown
+  [@@deriving show {with_path=false}]
+
+val of_value: e_val -> t
+
+(** {2 Evaluation} *)
+  
+type env = (ident * e_val) list
+  [@@deriving show]
+  (** Evaluation environment  *)
+
+(* val binops: (string * (int -> int -> int)) list
+ *   (\** ["+"; "-"; "*"; "/"] *\)
+ * val relops: (string * (int -> int -> bool)) list
+ *   (\** ["="; "!="; "<"; ">"; ">="; "<="] *\) *)
 
 (** {2 Printing} *)
 
 val to_string: t -> string
 
+val string_of_value: e_val -> string
+
 (** {2 Simulation} *)
 
-val lookup_env: env -> ident -> value
-val update_env: env -> ident -> value -> env
+val lookup_env: env -> ident -> e_val
+val update_env: env -> ident -> e_val -> env
   
-exception Unknown of ident
-exception Unbound of ident
+exception Unbound_id of ident
+exception Unknown_id of ident
 exception Illegal_expr of t
 
-val eval: env -> t -> value
+val eval: env -> t -> e_val

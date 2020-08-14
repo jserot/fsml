@@ -7,6 +7,6 @@ let to_string a = match a with
 
 (* Simulation *)
 
-let perform env a = match a with
+let perform env env' a = match a with
   | Assign (id, expr) -> 
-     Expr.update_env env id (Expr.eval env expr)
+     Expr.update_env env' id (Expr.eval (env @ env') expr)

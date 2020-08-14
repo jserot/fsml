@@ -15,7 +15,10 @@ let cfg = {
 exception Error of string * string   (* where, message *)
 
 let string_of_type t = match t with 
-  | Seqmodel.TyInt _ -> "int"
+  | Types.TyBool -> "int"
+  | Types.TyInt (sg, _) when Types.real_type sg = TyUnsigned-> "unsigned int"
+  | Types.TyInt _ -> "int"
+  | _ -> failwith ("C backend: illegal type: " ^ Types.to_string t)
 
 let string_of_typed_item ?(ptr=false) (id,ty) = match ty with 
   | _ -> string_of_type ty ^ " " ^ (if ptr then "*" else "") ^ id
@@ -30,11 +33,11 @@ let string_of_comp m id =
 
 let rec string_of_expr m e =
   let paren level s = if level > 0 then "(" ^ s ^ ")" else s in
-  let rec string_of level e = match e with
+  let rec string_of level e = match e.Expr.e_desc with
     Expr.EInt c -> string_of_int c
+  | Expr.EBool c -> if c then "1" else "0"
   | Expr.EVar n -> string_of_comp m n
-  | Expr.EBinop (op,e1,e2) -> paren level (string_of (level+1) e1 ^ string_of_op op ^ string_of (level+1) e2)
-  | Expr.ERelop (op,e1,e2) -> paren level (string_of (level+1) e1 ^ string_of_op op ^ string_of (level+1) e2) in
+  | Expr.EBinop (op,e1,e2) -> paren level (string_of (level+1) e1 ^ string_of_op op ^ string_of (level+1) e2) in
   string_of 0 e
 
 and string_of_op = function

@@ -12,11 +12,11 @@ architecture struct of tb is
 
 component pgcd is
   port(
-        start: in integer;
-        m: in integer;
-        n: in integer;
-        rdy: out integer;
-        r: out integer;
+        start: in std_logic;
+        m: in integer range 0 to 255;
+        n: in integer range 0 to 255;
+        rdy: out std_logic;
+        r: out integer range 0 to 255;
         clk: in std_logic;
         rst: in std_logic
         );
@@ -24,11 +24,11 @@ end component;
 
 signal clk: std_logic;
 signal rst: std_logic;
-signal start: integer;
-signal m: integer;
-signal n: integer;
-signal rdy: integer;
-signal r: integer;
+signal start: std_logic;
+signal m: integer range 0 to 255;
+signal n: integer range 0 to 255;
+signal rdy: std_logic;
+signal r: integer range 0 to 255;
 
 begin
 
@@ -49,9 +49,9 @@ begin
   end process;
 
   inp_start: process
-    type t_vc is record date: time; val: integer; end record;
+    type t_vc is record date: time; val: std_logic; end record;
     type t_vcs is array ( 0 to 2 ) of t_vc;
-    constant vcs : t_vcs := ( (0 ns,0), (15 ns,1), (35 ns,0) );
+    constant vcs : t_vcs := ( (0 ns, '0'), (15 ns, '1'), (35 ns, '0') );
     variable i : natural := 0;
     variable t : time := 0 ns;
     begin

@@ -13,8 +13,9 @@ let keyword_table = [
   "itrans", ITRANS;
   "inputs", INPUTS;
   "outputs", OUTPUTS;
-  (* "int", TYINT;
-   * "bool", TYBOOL; *)
+  "int", TYINT;
+  "uint", TYUINT;
+  "bool", TYBOOL;
   "when", WHEN;
   "with", WITH;
 ]
@@ -33,6 +34,8 @@ rule main = parse
       { UID (Lexing.lexeme lexbuf) }
   | ['0'-'9']+
       { INT (int_of_string(Lexing.lexeme lexbuf)) }
+  | "'0'" { BOOL false }
+  | "'1'" { BOOL true }
   | ";" { SEMICOLON }
   | "(" { LPAREN }
   | ")" { RPAREN }

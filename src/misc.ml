@@ -31,3 +31,7 @@ let string_of_opt f = function
 | Some x -> f x
 
 let rec bit_size n = if n=0 then 0 else 1 + bit_size (n/2)
+
+let rec pow2 k = if k = 0 then 1 else 2 * pow2 (k-1)
+
+let quote_string s = "\"" ^ s ^ "\""                                             

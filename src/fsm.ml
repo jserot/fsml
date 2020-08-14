@@ -1,11 +1,11 @@
 type t = {
   id: string;
   states: State.t list;
+  inps: (string * Types.t) list;
+  outps: (string * Types.t) list;
+  vars: (string * Types.t) list;
+  trans: Transition.t list;
   itrans: State.t * Action.t list;
-  inps: string list;
-  outps: string list;
-  vars: string list;
-  trans: Transition.t list
 } [@@deriving show {with_path=false}, yojson]
 
 (* Serializing/deserializing fns *)
@@ -36,10 +36,10 @@ type ctx = {
 [@@deriving show]
 
 let step ctx m = 
-    match List.find_opt (Transition.is_fireable ctx.state ctx.env) m.trans with
+  match List.find_opt (Transition.is_fireable ctx.state (Builtins.eval_env @ ctx.env)) m.trans with
     | Some (_, _, acts, dst) -> 
        { state = dst;
-         env = List.fold_left Action.perform ctx.env acts }
+         env = List.fold_left (Action.perform Builtins.eval_env) ctx.env acts }
     | None ->
        ctx
 

@@ -8,9 +8,8 @@ exception Illegal_guard_expr of Expr.t
 
 let eval env exp =
   match Expr.eval env exp with
-  | Bool b -> b
-  | Int _ -> raise (Illegal_guard_expr exp)
-  (* Note: this is typically this kind of runtime failure that GADTs can make impossible.. *)
+  | Expr.Bool b -> b
+  | _ -> raise (Illegal_guard_expr exp)
 
 let to_string exp = Expr.to_string exp
 

@@ -1,11 +1,11 @@
 [*]
 [*] GTKWave Analyzer v3.3.54 (w)1999-2014 BSI
-[*] Thu Aug  6 15:14:14 2020
+[*] Fri Aug 14 13:12:27 2020
 [*]
-[dumpfile] "/Users/jserot/Dev/ml/newfsm/test/vhdl/tb.vcd"
-[dumpfile_mtime] "Thu Aug  6 15:13:16 2020"
-[dumpfile_size] 1054
-[savefile] "/Users/jserot/Dev/ml/newfsm/test/vhdl/tb.gtkw"
+[dumpfile] "/Users/jserot/Dev/ml/fsml/examples/ex3/vhdl/tb.vcd"
+[dumpfile_mtime] "Fri Aug 14 13:12:05 2020"
+[dumpfile_size] 948
+[savefile] "/Users/jserot/Dev/ml/fsml/examples/ex3/vhdl/tb.gtkw"
 [timestart] 0
 [size] 1000 600
 [pos] -1 -1
@@ -18,13 +18,12 @@
 rst
 @28
 clk
+start
+@29
+rdy
 @24
-start[31:0]
 m[31:0]
 n[31:0]
-@25
-rdy[31:0]
-@24
 r[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

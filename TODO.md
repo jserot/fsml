@@ -1,6 +1,4 @@
 - add precise column position when reporting PPX parse errors 
-- typed IOs
 - mini-DSL for stimuli spec
 - VCD output for simulation
-- sanity check 
 - support for synchronous actions at the OCaml and C level

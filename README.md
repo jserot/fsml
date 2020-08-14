@@ -42,13 +42,13 @@ whenever its output `start` is set to 1:
 let f = [%fsm "
     name: gensig;
     states: E0, E1;
-    inputs: start;
-    outputs: s;
-    vars: k;
+    inputs: start:bool;
+    outputs: s:bool;
+    vars: k:int;
     trans:
-      E0 -> E1 when start=1 with k:=0, s:=1;
+      E0 -> E1 when start='1' with k:=0, s:='1';
       E1 -> E1 when k<4 with k:=k+1;
-      E1 -> E0 when k=4 with s:=0;
+      E1 -> E0 when k=4 with s:='0';
     itrans: -> E0;
     "]
 ```

@@ -5,7 +5,10 @@ let expand parser_name parser_fn ~loc ~path:_ (s:_) =
   let _ =
     try parser_fn s
     with Parse.Error (line,_,tok,msg) ->
-      Location.raise_errorf ~loc "%s at line %d near token \"%s\"" msg (loc.loc_start.pos_lnum+line) tok in
+      if line = -1 then (* No location *)
+        Location.raise_errorf ~loc "%s " msg
+      else
+        Location.raise_errorf ~loc "%s at line %d near token \"%s\"" msg (loc.loc_start.pos_lnum+line) tok in
   let f = Ast_builder.Default.evar ~loc parser_name in
   let e = Ast_builder.Default.estring ~loc s in
   [%expr [%e f] [%e e]]

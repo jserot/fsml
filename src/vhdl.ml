@@ -32,18 +32,23 @@ type vhdl_type =
   | Unsigned of int
   | Signed of int
   | Integer of int_range option
+  | Std_logic
 
-and int_range = int * int
+and int_range = int * int (* lo, hi *)             
 
 let vhdl_type_of t =
-  let open Seqmodel in
+  let open Types in
   match t with 
-  | TyInt None -> Integer None
-  | TyInt (Some (lo, hi)) ->
-      if cfg.use_numeric_std then
-        if lo < 0 then Signed (Misc.bit_size (max (-lo) hi)) else Unsigned (Misc.bit_size hi)
-      else
-        Integer (Some (lo,hi))
+  | TyBool -> Std_logic
+  | TyInt (sg, SzConst sz) ->
+     begin match Types.real_type sg, cfg.use_numeric_std with
+     | TyUnsigned, true -> Unsigned sz
+     | TyUnsigned, false -> Integer (Some (0, Misc.pow2 sz - 1))
+     | _, true -> Signed sz
+     | _, false -> Integer (Some (-Misc.pow2 (sz-1), Misc.pow2 (sz-1) - 1))
+     end
+  | TyInt (_, _) -> Integer None
+  | _ -> failwith ("VHDL backend: illegal type: " ^ Types.to_string t)
 
 type type_mark = TM_Full | TM_Abbr | TM_None [@@warning "-37"]
                                    
@@ -56,6 +61,7 @@ let string_of_vhdl_type ?(type_marks=TM_Full) t = match t, type_marks with
   | Signed _, TM_None -> "signed"
   | Integer (Some (lo,hi)), TM_Full -> Printf.sprintf "integer range %d to %d" lo hi
   | Integer _, _ -> "integer"
+  | Std_logic, _ -> "std_logic"
 
 let string_of_type ?(type_marks=TM_Full) t =
   string_of_vhdl_type ~type_marks:type_marks (vhdl_type_of t)
@@ -64,24 +70,21 @@ let string_of_op = function
   | "!=" -> " /= "
   | op ->  op
 
-let string_of_expr ?ty e =
+let string_of_expr e =
   let paren level s = if level > 0 then "(" ^ s ^ ")" else s in
   let rec string_of level e =
-    match e, ty  with
-    | Expr.EInt n, Some (Unsigned s) -> Printf.sprintf "to_unsigned(%d,%d)" n s
-    | Expr.EInt n, Some (Signed s) -> Printf.sprintf "to_signed(%d,%d)" n s
+    match e.Expr.e_desc, vhdl_type_of (e.Expr.e_typ)  with
+    | Expr.EInt n, Unsigned s -> Printf.sprintf "to_unsigned(%d,%d)" n s
+    | Expr.EInt n, Signed s -> Printf.sprintf "to_signed(%d,%d)" n s
     | Expr.EInt n, _ -> string_of_int n
+    | Expr.EBool b, _ -> if b then "'1'" else "'0'"
     | Expr.EVar n, _ ->  n
-    | Expr.ERelop (op,e1,e2), _ -> 
-       let s1 = string_of (level+1) e1 
-       and s2 = string_of (level+1) e2 in 
-       paren level (s1 ^ string_of_op op ^ s2)
-    | Expr.EBinop (op,e1,e2), _ -> 
+    | Expr.EBinop (op,e1,e2), ty -> 
        let s1 = string_of (level+1) e1 
        and s2 = string_of (level+1) e2 in 
        begin match op, ty with
-       | "*", Some (Signed _)
-       | "*", Some (Unsigned _) -> "mul(" ^ s1 ^ "," ^ s2 ^ ")"
+       | "*", Signed _
+       | "*", Unsigned _ -> "mul(" ^ s1 ^ "," ^ s2 ^ ")"
        | _, _ -> paren level (s1 ^ string_of_op op ^ s2)
        end
   in

@@ -11,22 +11,24 @@ type trace = clk * Fsm.ctx
 (** {2 Simulation functions} *)
 
 val run:
-  ctx:Fsm.ctx ->
+  ?ctx:Fsm.ctx ->
   stim:Events.t list ->
   Fsm.t ->
   trace list
   (** [run ctx stim m] performs a multi-step simulation of FSM [m] starting from
       context [ctx] and applying a sequence of stimuli described by [stim], producing
-      a sequence of traces. *)
+      a sequence of traces. FSM [m] is first type-checked. 
+      If the initial context [ctx] is not given it is built by triggering the initial transition
+      of [m] and gathers its inputs, local variables and outputs. *)
 
 val compute:
   ?istate:string (** Initial state (default: "Idle") *)
   -> ?start:string  (** Start input signal (default: "start") *)
   -> ?rdy:string    (** Rdy output signal (default: "rdy") *)
-  -> args:(string * Expr.value) list  (** Input arguments *)
+  -> args:(string * Expr.e_val) list  (** Input arguments *)
   -> ?results:string list (** Results (default: all outputs) *)
   -> Fsm.t        
-  -> int * (string * Expr.value option) list 
+  -> int * (string * Expr.e_val) list 
   (**
       [compute args m] is a special version of [run] dedicated to FSMs describing {i co-processing
       units}. The assumption is that such FSMs have
@@ -49,7 +51,9 @@ val compute:
       The name of of initial state, of the [start] and [rdy] signals can be modified using the optional 
       arguments [istate], [start] and [rdy] respectively.
       By default, all outputs will be considered as results. The [results] optional argument can be used to
-      modify this. *)
+      modify this. 
+
+      As for [!run], FSM [m] is first type-checked. *)
  
 (** {2 Post-processors} *)
 

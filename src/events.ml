@@ -1,5 +1,5 @@
-type t = Action.t list
+type t = Event.t list
 
 let to_string = function
 | [] -> "*"
-| evs -> Misc.string_of_list ~f:Action.to_string ~sep:"," evs
+| evs -> Misc.string_of_list ~f:Event.to_string ~sep:"," evs

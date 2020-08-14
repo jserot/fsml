@@ -11,6 +11,6 @@ val to_string: t -> string
 
 (** {2 Simulation} *)
 
-val perform: Expr.env -> t -> Expr.env
-  (** [perform env a] performs action [a] in the context of environment [env],
-      returning an updated env *)                                
+val perform: Expr.env -> Expr.env -> t -> Expr.env
+  (** [perform env env' a] performs action [a] in the context of environment [env @ env']
+       returning and updated version of [env'] *)                                
