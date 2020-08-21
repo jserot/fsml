@@ -59,13 +59,13 @@ and type_application where tenv ty_fn args =
  *   | TyBool, TyInt _
  *   | _, _ -> raise (Illegal_cast e) *)
 
-let type_check_fsm_action tenv act = match act with 
+let type_check_fsm_action_ tenv act = match act with 
   | Action.Assign (id, exp) -> 
      let t = Types.type_instance @@ lookup_tenv "variable" id tenv id in
      let t' = type_expression tenv exp in
      try_unify "action" (Action.to_string act) t t'
 
-let type_check_fsm_guard tenv gexp =
+let type_check_fsm_guard_ tenv gexp =
   let t = type_expression tenv gexp in
   try_unify "guard" (Guard.to_string gexp) t Types.TyBool
 
@@ -80,15 +80,15 @@ let type_check_fsm_transition f tenv (src,guards,actions,dst) =
      - for each [act]=[id:=exp] in [actions], [type(id)=type(exp)] *)
   type_check_fsm_state f src;
   type_check_fsm_state f dst;
-  List.iter (type_check_fsm_guard tenv) guards;
-  List.iter (type_check_fsm_action tenv) actions
+  List.iter (type_check_fsm_guard_ tenv) guards;
+  List.iter (type_check_fsm_action_ tenv) actions
 
 let type_check_fsm_itransition f tenv (s,acts) =
   (* For the initial transition [s with acts] check that
      - [s'] is listed as state if [n] declaration
      - for each [act]=[id:=exp] in [actions], [type(id)=type(exp)] *)
   type_check_fsm_state f s;
-  List.iter (type_check_fsm_action tenv) acts
+  List.iter (type_check_fsm_action_ tenv) acts
 
 (* Final type shortening and cleaning *)
 
@@ -128,16 +128,30 @@ let type_clean_fsm ~mono f =
   List.iter (type_clean_fsm_transition ~mono) f.Fsm.trans;
   type_clean_fsm_itransition ~mono f.Fsm.itrans
           
-let type_check_fsm ?(mono=false) f =
+let fsm_tenv ?(with_clk=false) f = 
   let open Fsm in
-  let tenv =
-    List.map
+  List.map
       (fun (id, t) -> id, Types.trivial_scheme t)
-      (f.vars @ f.inps @ f.outps) @ Builtins.typing_env in
+      (f.vars @ f.inps @ f.outps)
+  @ Builtins.typing_env
+  @ (if with_clk then ["clk", Types.trivial_scheme (Types.type_int ())] else [])
+
+let type_check_fsm ?(mono=false)  f =
+  let tenv = fsm_tenv f in
   List.iter (type_check_fsm_transition f tenv) f.trans;
   type_check_fsm_itransition f tenv f.itrans;
   type_clean_fsm ~mono f;
   f
+
+let type_check_fsm_guard ?(mono=false) ?(with_clk=false) f e =
+  type_check_fsm_guard_ (fsm_tenv ~with_clk f) e;
+  type_clean_fsm_guard ~mono e;
+  e
+
+let type_check_fsm_action ?(mono=false) f a =
+  type_check_fsm_action_ (fsm_tenv f) a;
+  type_clean_fsm_action ~mono a;
+  a
 
 (* Type checking values *)
 
@@ -153,7 +167,7 @@ let type_check_event f ((id,v) as e) =
      let t' = type_value v in
      try_unify "event" (Event.to_string e) t t'
 
-let type_check_events f evs = List.iter (type_check_event f) evs
+let type_check_events f (_,evs) = List.iter (type_check_event f) evs
                             
 let type_check_stimuli f st =
   List.iter (type_check_events f) st;

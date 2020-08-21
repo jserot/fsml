@@ -44,6 +44,11 @@ and e_val =
 
 val of_value: e_val -> t
 
+(** {2 Builders} *)
+
+val mk_bool_expr: e_desc -> t
+val mk_int_expr: e_desc -> t
+
 (** {2 Evaluation} *)
   
 type env = (ident * e_val) list

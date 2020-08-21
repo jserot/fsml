@@ -38,7 +38,10 @@ let parse f s =
   | Fsm_lexer.Illegal_character (_, _) -> error lexbuf "Illegal character"
   | Fsm_parser.Error -> error lexbuf "Syntax error"
 
+let guard = parse Fsm_parser.guard_top
+let guards = parse Fsm_parser.guards_top
 let action = parse Fsm_parser.action_top
+let actions = parse Fsm_parser.actions_top
 let transition = parse Fsm_parser.transition_top
-let stimuli = parse Fsm_parser.stimuli_top
+(* let stimuli = parse Fsm_parser.stimuli_top *)
 let fsm = parse Fsm_parser.fsm

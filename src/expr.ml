@@ -46,6 +46,9 @@ let of_value v = match v with
   | Bool v -> { e_desc=EBool v; e_typ=Types.TyBool }
   | _ -> failwith "Expr.of_value"
 
+let mk_bool_expr e = { e_desc = e; e_typ = Types.TyBool }
+let mk_int_expr e = { e_desc = e; e_typ = Types.type_int () }
+                   
 type env = (ident * e_val) list
   [@@deriving show]
 

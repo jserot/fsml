@@ -17,8 +17,21 @@ let _ = Dot.view f2
 
 (* Let's simulate it *)
 
+(* let st = [%fsm_stim {|start: 0,'0'; 1,'1'; 2,'0'|}] *)
+(* let st = [
+ *     0, ["start", Expr.Bool false];
+ *     1, ["start", Expr.Bool true];
+ *     2, ["start", Expr.Bool false];
+ *   ] *)
+
+let st = Stimuli.changes "start" [
+           0, Bool false;
+           1, Bool true;
+           2, Bool false
+           ]       
+
 let _ =
   f2
-  |> Simul.run ~stim:[%fsm_stim {| start:='0'; start:='1'; start:='0'; *; *; *; *; * |}]
+  |> Simul.run ~stim:st ~stop_after:8
   |> Simul.filter_trace
   |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))

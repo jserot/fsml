@@ -32,7 +32,10 @@ let mk_ext ext_name parser_name parser_fn =
     Ast_pattern.(single_expr_payload (estring __))
     (expand parser_name parser_fn)
 
+let () = Ppxlib.Driver.register_transformation "fsm_guard" ~extensions:[mk_ext "fsm_guard" "Parse.guard" Parse.guard]
+let () = Ppxlib.Driver.register_transformation "fsm_guards" ~extensions:[mk_ext "fsm_guards" "Parse.guards" Parse.guards]
 let () = Ppxlib.Driver.register_transformation "fsm_action" ~extensions:[mk_ext "fsm_action" "Parse.action" Parse.action]
+let () = Ppxlib.Driver.register_transformation "fsm_actions" ~extensions:[mk_ext "fsm_actions" "Parse.actions" Parse.actions]
 let () = Ppxlib.Driver.register_transformation "fsm_trans" ~extensions:[mk_ext "fsm_trans" "Parse.transition" Parse.transition]
 let () = Ppxlib.Driver.register_transformation "fsm" ~extensions:[mk_ext "fsm" "Parse.fsm" Parse.fsm]
-let () = Ppxlib.Driver.register_transformation "fsm_stim" ~extensions:[mk_ext "fsm_stim" "Parse.stimuli" Parse.stimuli]
+(* let () = Ppxlib.Driver.register_transformation "fsm_stim" ~extensions:[mk_ext "fsm_stim" "Parse.stimuli" Parse.stimuli] *)

@@ -42,9 +42,12 @@
 %left TIMES DIV
 (* %nonassoc prec_unary_minus         (\* Highest precedence *\) *)
 
+%start <Guard.t> guard_top
+%start <Guard.t list> guards_top
 %start <Action.t> action_top
+%start <Action.t list> actions_top
 %start <Transition.t> transition_top
-%start <Events.t list> stimuli_top
+(* %start <Events.t list> stimuli_top *)
 %start <Fsm.t> fsm
 
 %{
@@ -163,27 +166,36 @@ int_size:
 
 (* Simulation events *)
 
-value:
-  | v = INT
-      { Expr.Int v }
-  | v = BOOL
-      { Expr.Bool v }
-
-event:
-  | id=LID COLEQ v=value  { (id,v) }
-
-events:
-  | TIMES { [] }
-  | events=separated_nonempty_list(COMMA, event) { events }
+(* value:
+ *   | v = INT
+ *       { Expr.Int v }
+ *   | v = BOOL
+ *       { Expr.Bool v }
+ * 
+ * event:
+ *   | id=LID COLEQ v=value  { (id,v) }
+ * 
+ * events:
+ *   | TIMES { [] }
+ *   | events=separated_nonempty_list(COMMA, event) { events } *)
 
 (* Hooks to intermediate parsers *)
+
+guard_top: 
+  | g=expr EOF { g }
+
+guards_top: 
+  | gs=separated_list(COMMA, expr) EOF { gs }
+
+action_top: 
+  | act=action EOF { act }
+
+actions_top: 
+  | acts=separated_list(COMMA, action) EOF { acts }
 
 transition_top: 
   | t=transition EOF { t }
 
-action_top: 
-  | a=action EOF { a }
-
-stimuli_top:
-  | stimuli=separated_nonempty_list(SEMICOLON, events) EOF { stimuli }
+(* stimuli_top:
+ *   | stimuli=separated_nonempty_list(SEMICOLON, events) EOF { stimuli } *)
 

@@ -25,20 +25,19 @@ let _ = Dot.view f3
 
 (* Let's simulate it *)
 
+let st =
+  Stimuli.merge [
+    Stimuli.changes "start" [ 0, Bool false; 1, Bool true; 2, Bool false ];
+    Stimuli.changes "m" [ 0, Int 12 ];
+    Stimuli.changes "n" [ 0, Int 5 ]
+    ]
+
 let _ =
   f3
-  |> Simul.run ~stim:[%fsm_stim {| start:='0',m:=12,n:=5; start:='1'; start:='0'; *; *; *; *; * |}]
+  |> Simul.run ~stim:st ~stop_when:[%fsm_guards {|rdy='1',clk>2|}]
+  (* The extra condition "clk>2" prevents the initial setting of [rdy] to prematurely stop the simulation *)
   |> Simul.filter_trace
   |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))
-
-(* ... using a higher-level interface *)
-
-let () = 
-  let nclk, result =
-    f3 
-    |> Simul.compute ~args:["m", Int 36; "n", Int 24] ~results:["r"]
-   in
-   Printf.printf "** Got %s after %d clk cycles\n" (Expr.show_env result) nclk
 
 (* Code generation *)
 
