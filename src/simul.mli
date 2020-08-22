@@ -34,9 +34,9 @@ val run:
       a previous simulation.
       If a list of guards is given as optional argument [stop_when], then simulation stops as soon all of these guards 
       of the these guards becomes true. The guards may include relational operators on the special variable
-      [_clk], refering to the current simulation step. Ex: [-stop_when [%fsm_guard {|rdy=1|}; 
+      [clk], refering to the current simulation step. Ex: [-stop_when [%fsm_guard {|rdy=1|}]]; 
       If a clock cycle count [n] is given as optional argument [stop_after], then simulation stops after exactly 
-      [n] steps (so that [-stop_after n] is actually a shorthand for [-stop_when "_clk=n"]. *)
+      [n] steps (so that [-stop_after n] is actually a shorthand for [-stop_when "clk=n"]). *)
 
 (** {2 Post-processors} *)
 

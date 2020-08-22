@@ -19,7 +19,7 @@ val guard: string -> Guard.t
   (** [guard s] builds an guard from a string representation.
       The syntax of the string is {i exp}, where {i exp} denotes a boolean expression.
 
-      For example : [start=1] or [k<2] 
+      For example : [start='1'] or [k<2] 
 
       Raises {!Error} if parsing [s] or if {i exp} does not denote a boolean expression.
 
@@ -33,7 +33,7 @@ val guards: string -> Guard.t list
   (** [guard s] builds a list of guards from a string representation.
       The syntax of the string is {i exp1,...,expn}, where each {i expi} denotes a boolean expression.
 
-      For example : [start=1,k<2]
+      For example : [start='1', k<2]
 
       Raises {!Error} if parsing [s] or if {i expi} does not denote a boolean expression.
 
@@ -61,7 +61,7 @@ val actions: string -> Action.t list
   (** [action s] builds a list of actions from a string representation.
       The syntax of the string is {i act1, ..., actn} where {i act} is an action.
 
-      For example : [rdy:=0,s:=1]
+      For example : [rdy:=0, s:=1]
 
       Raises {!Error} if parsing [s] fails.
 

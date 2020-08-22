@@ -19,14 +19,20 @@ type env = (string * Types.typ_scheme) list
 
 val type_check_fsm: ?mono:bool -> Fsm.t -> Fsm.t
   (** [type_check_fsm f] type checks FSM [f], raising [!Typing_error] when 
-      appropriate. Passing the optional [mono] argument also checks that all types occuring in the
+      appropriate. Setting the optional [mono] argument also checks that all types occuring in the
       FSM definitions are monomorphic. This is required, for instance to generate C or VHDL code. *)
 
 val type_check_fsm_guard: ?mono:bool -> ?with_clk:bool -> Fsm.t -> Guard.t -> Guard.t
-  (** [type_check_fsm_guard f e] type checks guard expression [e] in the context of FSM [f]. *)
+  (** [type_check_fsm_guard f e] type checks guard expression [e] in the context of FSM [f].
+      As for [type_check_fsm], setting the [mono] optional argument also checks that all involved
+      types are monomorphic.
+      Setting the [with_clk] optional argument adds a variable named [clk] (with type [int]) to 
+      the typing environment. *)
 
 val type_check_fsm_action: ?mono:bool -> Fsm.t -> Action.t -> Action.t
-  (** [type_check_fsm_action f a] type checks action [a] in the context of FSM [f]. *)
+  (** [type_check_fsm_action f a] type checks action [a] in the context of FSM [f].
+      As for [type_check_fsm], passing the [mono] optional argument also checks that all involved
+      types are monomorphic. *)
 
 val type_check_stimuli: Fsm.t -> Stimuli.t list -> Stimuli.t list
   (** [type_check_stimuli f s] type checks a sequence [s] of stimuli for a FSM [f], raising [!Typing_error] when 
