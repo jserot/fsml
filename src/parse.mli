@@ -139,7 +139,7 @@ val fsm: string -> Fsm.t
       When using the PPX extension, syntax errors in the transition description are detected 
       and reported at compile time. *) 
 
-val stimuli: string -> Stimuli.t list
+val stimuli: string -> Tevents.t list
       (** [stimuli s] builds a sequence of stimuli from a string representation.
       The syntax of the string is
 

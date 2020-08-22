@@ -26,18 +26,16 @@ let _ = Dot.view f3
 (* Let's simulate it *)
 
 let st =
-  Stimuli.merge [
+  Tevents.merge [
     [%fsm_stim "start: 0,'0'; 1,'1'; 2,'0'"];
     [%fsm_stim "m: 0,36"];
     [%fsm_stim "n: 0,24"];
     ]
 
-let _ =
-  f3
-  |> Simul.run ~stim:st ~stop_when:[%fsm_guards {|rdy='1',clk>2|}]
-  (* The extra condition "clk>2" prevents the initial setting of [rdy] to prematurely stop the simulation *)
-  |> Simul.filter_trace
-  |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))
+let res, _ = Simul.run ~stop_when:[%fsm_guards {|rdy='1',clk>2|}] ~stim:st f3
+(* The extra condition "clk>2" prevents the initial setting of [rdy] to prematurely stop the simulation *)
+open Tevents
+let _ = List.iter (fun t -> Printf.printf "%s\n" (Tevents.show t)) (st @@@ res)
 
 (* Code generation *)
 

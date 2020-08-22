@@ -36,20 +36,3 @@ val to_file: fname:string -> t -> unit
     
 val from_file: fname:string -> t
   (** [from_file f] returns the FSM [m] stored in file [f] using the [Yojson] library *)
-
-(** {2 Simulation} *)
-
-type ctx = {
-  state: State.t;
-  env: Expr.env
-  }
-[@@deriving show]
-  (** A context is the dynamic view of a FSM. It records its current state
-     and, in [env], the value of its inputs, outputs and local variables. *)
-
-val step: ctx -> t -> ctx
-  (** [step ctx m] performs one single simulation step, within context [ctx] of FSM [m]. 
-      The first fireable transition is selected according to the current state and
-      value of the inputs and local variables. The actions associated to this transition
-      are executed and both the state and context are updated accordingly.
-      If no fireable transition is found, the context is left unchanged. *)

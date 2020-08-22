@@ -10,14 +10,11 @@
 (*                                                                    *)
 (**********************************************************************)
 
-type t = 
-  | Assign of Expr.ident * Expr.t        (* var/i/o, value *)
-  [@@deriving show {with_path=false}, yojson]
+(** {1 Clock} *)
 
-let to_string a = match a with
-  | Assign (id, expr) -> id ^ ":=" ^ Expr.to_string expr
+type clk = int
+  [@@deriving show {with_path=false}]
+  (** Clock cycle counter *)
 
-(* Simulation *)
-
-let perform env a = match a with
-  | Assign (id, expr) -> [ id, Expr.eval env expr ]
+type 'a clocked = clk * 'a
+  [@@deriving show {with_path=false}]

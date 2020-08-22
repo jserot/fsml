@@ -34,7 +34,7 @@ val type_check_fsm_action: ?mono:bool -> Fsm.t -> Action.t -> Action.t
       As for [type_check_fsm], passing the [mono] optional argument also checks that all involved
       types are monomorphic. *)
 
-val type_check_stimuli: Fsm.t -> Stimuli.t list -> Stimuli.t list
+val type_check_stimuli: Fsm.t -> Tevents.t list -> Tevents.t list
   (** [type_check_stimuli f s] type checks a sequence [s] of stimuli for a FSM [f], raising [!Typing_error] when 
       appropriate (for example if an event [e] refers to a non-existent input of [f] or if the type of value asssociated 
       to [e] does not match the type of the corresponding input in [f]. *)

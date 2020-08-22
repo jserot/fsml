@@ -64,7 +64,7 @@ let lookup_env env id =
   with 
     Not_found -> raise (Unknown_id id)
 
-let update_env env k v = 
+let update_env env (k,v) = 
   let rec scan = function
     | [] -> []
     | (k',v')::rest -> if k=k' then (k, v)::rest else (k',v')::scan rest in

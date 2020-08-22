@@ -48,7 +48,7 @@
 %start <Action.t list> actions_top
 %start <Transition.t> transition_top
 %start <Fsm.t> fsm
-%start <Stimuli.t list> stimuli
+%start <Tevents.t list> stimuli
 
 %{
 open Fsm
@@ -176,7 +176,7 @@ event:
   | t=INT COMMA v=value  { (t,v) }
 
 stimuli:
-  | id=LID COLON vcs=separated_nonempty_list(SEMICOLON, event) EOF { Stimuli.changes id vcs }
+  | id=LID COLON vcs=separated_nonempty_list(SEMICOLON, event) EOF { Tevents.changes id vcs }
 
 (* Hooks to intermediate parsers *)
 

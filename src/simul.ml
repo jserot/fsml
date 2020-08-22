@@ -12,13 +12,28 @@
 
 open Fsm
 
-type trace = Stimuli.clk * ctx 
-  [@@deriving show]
+type ctx = {
+  state: State.t;
+  env: Expr.env
+  }
+[@@deriving show]
 
 let check_fsm m = Typing.type_check_fsm m
 let check_stimuli m st = Typing.type_check_stimuli m st
 
-let run ?ctx ?(stop_when=[]) ?(stop_after=0) ~stim m =
+let step ctx m = 
+  match List.find_opt (Transition.is_fireable ctx.state (Builtins.eval_env @ ctx.env)) m.trans with
+    | Some (_, _, acts, dst) -> 
+       let evs = List.concat @@ List.map (Action.perform (Builtins.eval_env @ ctx.env)) acts in
+       evs,
+       { state = dst;
+         env = List.fold_left Expr.update_env ctx.env evs }
+    | None ->
+       [],
+       ctx
+
+let run ?ctx ?(stop_when=[]) ?(stop_after=0) ?(trace=false) ~stim m =
+  let open Clock in
   let m = check_fsm m in
   let stim = check_stimuli m stim in
   let stop_conds =
@@ -30,44 +45,25 @@ let run ?ctx ?(stop_when=[]) ?(stop_after=0) ~stim m =
   let eval_stop_conds clk ctx =
     let env' = Builtins.eval_env @ ctx.env @ ["clk", Expr.Int clk] in
     List.for_all (Guard.eval env') stop_conds in
-  let rec eval (clk, ctx, trace) stim =
-    if eval_stop_conds clk ctx then List.rev trace (* Done ! *)
+  let trace_log = ref ([] : ctx clocked list) in
+  let rec eval (clk, ctx, evs) stim =
+    if eval_stop_conds clk ctx then List.rev evs, List.rev !trace_log (* Done ! *)
     else
       match stim with
-      | [] -> (* No more stimuli *)
-         let ctx'' = Fsm.step ctx m in
-         (* Printf.printf "clk=%d ctx''=%s\n" clk (Fsm.show_ctx ctx''); *)
-         eval (clk+1, ctx'', (clk, ctx'') :: trace) []
-      | (t,evs)::rest ->
-         let acts = List.map (fun (id,v) -> Action.Assign (id, Expr.of_value v)) evs in
-         (* Printf.printf "clk=%d acts=%s\n" clk (Misc.string_of_list ~f:Action.show ~sep:"," acts); *)
-         let ctx' = { ctx with env = List.fold_left (Action.perform Builtins.eval_env) ctx.env acts } in
-         (* Printf.printf "clk=%d ctx'=%s\n" clk (Fsm.show_ctx ctx'); *)
-         let ctx'' = Fsm.step ctx' m in
-         (* Printf.printf "clk=%d ctx''=%s\n" clk (Fsm.show_ctx ctx''); *)
-         eval (clk+1, ctx'', (clk, ctx'') :: trace) rest in
+      | (t,evs')::rest when t=clk ->
+         let ctx' = { ctx with env = List.fold_left Expr.update_env ctx.env evs' } in
+         let evs'', ctx'' = step ctx' m in
+         if trace then trace_log := (t,ctx'')::!trace_log;
+         eval (clk+1, ctx'', (t,evs'')::evs) rest
+      | _ ->  (* No applicable stimuli *)
+         let evs', ctx' = step ctx m in
+         if trace then trace_log := (clk,ctx')::!trace_log;
+         eval (clk+1, ctx', (clk, evs')::evs) [] in
   let ctx = match ctx, m.Fsm.itrans with
     | Some c, _ -> c
     | None, (s0,acts0) ->
        let env0 = List.map (fun (id,_) -> id, Expr.Unknown) (m.inps @ m.outps @ m.vars) in
-       { state = s0; env = List.fold_left (Action.perform Builtins.eval_env) env0 acts0 } in
-  eval (1, ctx, [0, ctx]) stim
-[@@warning "-27"]
-
-let rec env_diff env env' = match env, env' with
-| [], [] -> []
-| (k,v)::rest, (k',v')::rest' when k=k' -> if v=v' then env_diff rest rest' else (k',v') :: env_diff rest rest'
-| _, _ -> failwith "Simul.env_diff"
-
-let ctx_diff ctx ctx' = { state = ctx'.state; env = env_diff ctx.env ctx'.env }
-
-let trace_diff (_,ctx) (clk',ctx') = (clk', ctx_diff ctx ctx')
-
-let filter_trace ts = 
-  let rec scan prev ts = match ts with
-    | [] -> []
-    | t::ts -> let t' = trace_diff prev t in  t' :: scan t ts in
-  match ts with 
-| [] -> []
-| t::ts -> t:: scan t ts 
-
+       let evs0 = List.concat @@ List.map (Action.perform (Builtins.eval_env @ env0)) acts0 in
+       { state = s0; env = List.fold_left Expr.update_env env0 evs0 } in
+  if trace then trace_log := [0,ctx];
+  eval (0, ctx, []) stim

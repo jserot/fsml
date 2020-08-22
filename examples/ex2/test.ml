@@ -35,10 +35,8 @@ let _ = Dot.view f2
 
 (* But this one is shorter  :*)
       
-let st = [%fsm_stim {|start: 0,'0'; 1,'1'; 2,'0'|}]
+let stim = [%fsm_stim {|start: 0,'0'; 1,'1'; 2,'0'|}]
 
-let _ =
-  f2
-  |> Simul.run ~stim:st ~stop_after:8
-  |> Simul.filter_trace
-  |> List.iter (fun t -> Printf.printf "%s\n" (Simul.show_trace t))
+let res, _ = Simul.run ~stop_after:8 ~stim:stim f2
+open Tevents
+let _ = List.iter (fun t -> Printf.printf "%s\n" (Tevents.show t)) (stim @@@ res)

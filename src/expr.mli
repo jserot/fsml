@@ -69,7 +69,7 @@ val string_of_value: e_val -> string
 (** {2 Simulation} *)
 
 val lookup_env: env -> ident -> e_val
-val update_env: env -> ident -> e_val -> env
+val update_env: env -> ident * e_val -> env
   
 exception Unbound_id of ident
 exception Unknown_id of ident

@@ -38,20 +38,3 @@ let from_file ~fname =
   match fname |> Yojson.Safe.from_file |> of_yojson with
   | Ok v -> v
   | Error _ -> Yojson.json_error "Fsm.from_string: invalid JSON file"
-
-(* Simulation *)
-
-type ctx = {
-    state: State.t;
-    env: Expr.env
-  }
-[@@deriving show]
-
-let step ctx m = 
-  match List.find_opt (Transition.is_fireable ctx.state (Builtins.eval_env @ ctx.env)) m.trans with
-    | Some (_, _, acts, dst) -> 
-       { state = dst;
-         env = List.fold_left (Action.perform Builtins.eval_env) ctx.env acts }
-    | None ->
-       ctx
-
