@@ -47,8 +47,8 @@
 %start <Action.t> action_top
 %start <Action.t list> actions_top
 %start <Transition.t> transition_top
-(* %start <Events.t list> stimuli_top *)
 %start <Fsm.t> fsm
+%start <Stimuli.t list> stimuli
 
 %{
 open Fsm
@@ -164,20 +164,19 @@ int_size:
   | (* Nothing *) { Types.SzVar (Types.new_size_var ()) }
   | LT sz=INT GT { Types.SzConst sz }
 
-(* Simulation events *)
+(* Simulation stimuli *)
 
-(* value:
- *   | v = INT
- *       { Expr.Int v }
- *   | v = BOOL
- *       { Expr.Bool v }
- * 
- * event:
- *   | id=LID COLEQ v=value  { (id,v) }
- * 
- * events:
- *   | TIMES { [] }
- *   | events=separated_nonempty_list(COMMA, event) { events } *)
+value:
+  | v = INT
+      { Expr.Int v }
+  | v = BOOL
+      { Expr.Bool v }
+
+event:
+  | t=INT COMMA v=value  { (t,v) }
+
+stimuli:
+  | id=LID COLON vcs=separated_nonempty_list(SEMICOLON, event) EOF { Stimuli.changes id vcs }
 
 (* Hooks to intermediate parsers *)
 
@@ -195,7 +194,4 @@ actions_top:
 
 transition_top: 
   | t=transition EOF { t }
-
-(* stimuli_top:
- *   | stimuli=separated_nonempty_list(SEMICOLON, events) EOF { stimuli } *)
 

@@ -17,18 +17,25 @@ let _ = Dot.view f2
 
 (* Let's simulate it *)
 
-(* let st = [%fsm_stim {|start: 0,'0'; 1,'1'; 2,'0'|}] *)
-(* let st = [
+(* let st =
+ *   [
  *     0, ["start", Expr.Bool false];
  *     1, ["start", Expr.Bool true];
  *     2, ["start", Expr.Bool false];
  *   ] *)
+(* This formulation is OK ... *)
 
-let st = Stimuli.changes "start" [
-           0, Bool false;
-           1, Bool true;
-           2, Bool false
-           ]       
+(* let st = Stimuli.changes "start"
+ *   [
+ *            0, Bool false;
+ *            1, Bool true;
+ *            2, Bool false
+ *            ]        *)
+(* This one also is also OK ... *)
+
+(* But this one is shorter  :*)
+      
+let st = [%fsm_stim {|start: 0,'0'; 1,'1'; 2,'0'|}]
 
 let _ =
   f2

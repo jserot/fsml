@@ -27,9 +27,9 @@ let _ = Dot.view f3
 
 let st =
   Stimuli.merge [
-    Stimuli.changes "start" [ 0, Bool false; 1, Bool true; 2, Bool false ];
-    Stimuli.changes "m" [ 0, Int 12 ];
-    Stimuli.changes "n" [ 0, Int 5 ]
+    [%fsm_stim "start: 0,'0'; 1,'1'; 2,'0'"];
+    [%fsm_stim "m: 0,36"];
+    [%fsm_stim "n: 0,24"];
     ]
 
 let _ =

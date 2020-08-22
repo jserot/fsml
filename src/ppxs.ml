@@ -38,4 +38,4 @@ let () = Ppxlib.Driver.register_transformation "fsm_action" ~extensions:[mk_ext 
 let () = Ppxlib.Driver.register_transformation "fsm_actions" ~extensions:[mk_ext "fsm_actions" "Parse.actions" Parse.actions]
 let () = Ppxlib.Driver.register_transformation "fsm_trans" ~extensions:[mk_ext "fsm_trans" "Parse.transition" Parse.transition]
 let () = Ppxlib.Driver.register_transformation "fsm" ~extensions:[mk_ext "fsm" "Parse.fsm" Parse.fsm]
-(* let () = Ppxlib.Driver.register_transformation "fsm_stim" ~extensions:[mk_ext "fsm_stim" "Parse.stimuli" Parse.stimuli] *)
+let () = Ppxlib.Driver.register_transformation "fsm_stim" ~extensions:[mk_ext "fsm_stim" "Parse.stimuli" Parse.stimuli]

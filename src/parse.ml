@@ -43,5 +43,5 @@ let guards = parse Fsm_parser.guards_top
 let action = parse Fsm_parser.action_top
 let actions = parse Fsm_parser.actions_top
 let transition = parse Fsm_parser.transition_top
-(* let stimuli = parse Fsm_parser.stimuli_top *)
+let stimuli = parse Fsm_parser.stimuli
 let fsm = parse Fsm_parser.fsm
