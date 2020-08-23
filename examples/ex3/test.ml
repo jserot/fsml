@@ -21,7 +21,7 @@ let f3 = [%fsm {|
     itrans: -> Idle with rdy:='1';
     |}] 
 
-let _ = Dot.view f3
+let _ = Dot.write "test.dot" f3
 
 (* Let's simulate it *)
 
@@ -32,10 +32,11 @@ let st =
     [%fsm_stim "n: 0,24"];
     ]
 
-let res, _ = Simul.run ~stop_when:[%fsm_guards {|rdy='1',clk>2|}] ~stim:st f3
-(* The extra condition "clk>2" prevents the initial setting of [rdy] to prematurely stop the simulation *)
-open Tevents
+open Tevents.Ops
+
+let res, _ = Simul.run ~stop_when:[%fsm_guards {|rdy='1',clk>5|}] ~stim:st f3
 let _ = List.iter (fun t -> Printf.printf "%s\n" (Tevents.show t)) (st @@@ res)
+let _ = Vcd.write ~fname:"test.vcd" ~fsm:f3 (st @@@ res)
 
 (* Code generation *)
 

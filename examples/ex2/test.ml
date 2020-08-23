@@ -5,38 +5,28 @@ let f2 = [%fsm {|
     states: E0, E1;
     inputs: start: bool;
     outputs: s: bool;
-    vars: k: int;
+    vars: k: int<8>;
     trans:
       E0 -> E1 when start='1' with k:=0, s:='1';
       E1 -> E1 when k<4 with k:=k+1;
       E1 -> E0 when k=4 with s:='0';
-    itrans: -> E0;
+    itrans: -> E0 with s:='0';
     |}]
 
-let _ = Dot.view f2
+let _ = Dot.write "test.dot" f2
 
-(* Let's simulate it *)
+(* Simulation *)
 
-(* let st =
- *   [
- *     0, ["start", Expr.Bool false];
- *     1, ["start", Expr.Bool true];
- *     2, ["start", Expr.Bool false];
- *   ] *)
-(* This formulation is OK ... *)
-
-(* let st = Stimuli.changes "start"
- *   [
- *            0, Bool false;
- *            1, Bool true;
- *            2, Bool false
- *            ]        *)
-(* This one also is also OK ... *)
-
-(* But this one is shorter  :*)
-      
 let stim = [%fsm_stim {|start: 0,'0'; 1,'1'; 2,'0'|}]
 
+open Tevents.Ops
+
 let res, _ = Simul.run ~stop_after:8 ~stim:stim f2
-open Tevents
 let _ = List.iter (fun t -> Printf.printf "%s\n" (Tevents.show t)) (stim @@@ res)
+let _ = Vcd.write ~fname:"test.vcd" ~fsm:f2 (stim @@@ res)
+
+(* Code generation *)
+
+let () = C.write ~fname:"./c/fsm_genimp" f2
+let () = Vhdl.write ~fname:"./vhdl/fsm_genimp" f2
+
