@@ -16,11 +16,13 @@ type t = Event.t list Clock.clocked
   [@@deriving show {with_path=false}]
   (** A timed event set (TES) is a list of events occuring at a given clock cycle.
       Example [4, [x:=1,y:=1]] means that both [x] and [y] take value [1] at clock cycle 4.
-      TES are used by simulator both to represent {i input stimuli} and {i output events}} *)
+      TES are used by simulator both to represent {i input stimuli} and {i output events} *)
 
+module Ops : sig
 val ( @@@ ): t list -> t list -> t list
   (** The [@@@] infix operator merges two sequences of TES wrt. clock cycles.
       Ex: [[(0,[x:=1]); (2;[x:=0])] @@@ [(1,[y:=1]); (2;y:=0)]] gives [[(0,[x:=1]); (1,[y:=1]); (2,[x:=0;y:=0])]]. *)
+end
   
 val merge: t list list -> t list
   (** [merge [st1; ...: stn]] merges n sequences of TES wrt. clock cycles.

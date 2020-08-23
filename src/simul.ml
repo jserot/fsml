@@ -23,9 +23,9 @@ let check_stimuli m st = Typing.type_check_stimuli m st
 
 let step ctx m = 
   match List.find_opt (Transition.is_fireable ctx.state (Builtins.eval_env @ ctx.env)) m.trans with
-    | Some (_, _, acts, dst) -> 
+    | Some (src, _, acts, dst) -> 
        let evs = List.concat @@ List.map (Action.perform (Builtins.eval_env @ ctx.env)) acts in
-       evs,
+       (if src <> dst then ("state",Expr.Enum dst)::evs else evs),
        { state = dst;
          env = List.fold_left Expr.update_env ctx.env evs }
     | None ->
@@ -54,16 +54,24 @@ let run ?ctx ?(stop_when=[]) ?(stop_after=0) ?(trace=false) ~stim m =
          let ctx' = { ctx with env = List.fold_left Expr.update_env ctx.env evs' } in
          let evs'', ctx'' = step ctx' m in
          if trace then trace_log := (t,ctx'')::!trace_log;
-         eval (clk+1, ctx'', (t,evs'')::evs) rest
+         let evs''' =
+           begin match evs with
+           | (t',es)::rest when t'=t -> (t',es@evs'')::rest
+           | _ -> (t,evs'')::evs
+           end in
+         eval (clk+1, ctx'', evs''') rest
       | _ ->  (* No applicable stimuli *)
          let evs', ctx' = step ctx m in
          if trace then trace_log := (clk,ctx')::!trace_log;
          eval (clk+1, ctx', (clk, evs')::evs) [] in
-  let ctx = match ctx, m.Fsm.itrans with
-    | Some c, _ -> c
+  let ctx, evs = match ctx, m.Fsm.itrans with
+    | Some c, _ ->
+       c,
+       []
     | None, (s0,acts0) ->
        let env0 = List.map (fun (id,_) -> id, Expr.Unknown) (m.inps @ m.outps @ m.vars) in
        let evs0 = List.concat @@ List.map (Action.perform (Builtins.eval_env @ env0)) acts0 in
-       { state = s0; env = List.fold_left Expr.update_env env0 evs0 } in
+       { state = s0; env = List.fold_left Expr.update_env env0 evs0 },
+       [0, ("state",Expr.Enum s0)::evs0] in
   if trace then trace_log := [0,ctx];
-  eval (0, ctx, []) stim
+  eval (0, ctx, evs) stim

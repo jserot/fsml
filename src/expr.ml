@@ -39,6 +39,7 @@ and e_val =
   | Bool of bool
   | Prim of (e_val list -> e_val)
   | Unknown
+  | Enum of string
   [@@deriving show {with_path=false}]
 
 let of_value v = match v with
@@ -92,6 +93,7 @@ let string_of_value v = match v with
   | Bool b -> if b then "'1'" else "'0'"
   | Prim _ -> "<prim>"
   | Unknown -> "<unknown>"
+  | Enum s -> s
 
 
 

@@ -20,6 +20,12 @@ let string_of_list ~f ~sep l =
 let iter_fst f l =
   ignore (List.fold_left (fun z x -> f z x; false) true l)
 
+let list_make ~f ~lo ~hi =
+  let rec mk i =
+    if i <= hi then f i :: mk (i+1)
+    else [] in
+  mk lo
+
 let list_parse ~parse_item ~sep s =
  let rec parse s =
   match Stream.peek s with

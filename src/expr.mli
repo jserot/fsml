@@ -40,6 +40,7 @@ and e_val =
   | Bool of bool
   | Prim of (e_val list -> e_val) 
   | Unknown
+  | Enum of string  (** This is a hack to allow tracing of state transitions  *)
   [@@deriving show {with_path=false}]
 
 val of_value: e_val -> t
@@ -54,11 +55,6 @@ val mk_int_expr: e_desc -> t
 type env = (ident * e_val) list
   [@@deriving show]
   (** Evaluation environment  *)
-
-(* val binops: (string * (int -> int -> int)) list
- *   (\** ["+"; "-"; "*"; "/"] *\)
- * val relops: (string * (int -> int -> bool)) list
- *   (\** ["="; "!="; "<"; ">"; ">="; "<="] *\) *)
 
 (** {2 Printing} *)
 

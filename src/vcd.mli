@@ -10,29 +10,14 @@
 (*                                                                    *)
 (**********************************************************************)
 
-type t = Event.t list Clock.clocked
-  [@@deriving show {with_path=false}]
+(** {1 VCD output} *)
 
-let merge2 l1 l2 =
-  let rec h l1 l2 = match l1, l2 with
-        [], [] -> []
-      | l1, [] -> l1
-      | [], l2 -> l2
-      | (t1,evs1)::ss1, (t2,evs2)::ss2 ->
-         if t1=t2 then (t1,evs1@evs2) :: h ss1 ss2
-         else if t1<t2 then (t1,evs1) :: h ss1 l2
-         else (t2,evs2) :: h l1 ss2 in
-    h l1 l2
+val write: fname:string -> fsm:Fsm.t -> Tevents.t list -> unit
+  (** [write ~fname:file ~fsm:f evs] writes a representation of a list of timed events sets [evs],
+      for FSM [f] in VCD (Value Change Dump) format in file [file]. *)
 
-module Ops = struct
-  let ( @@@ ) l1 l2 = merge2 l1 l2
-end
-                  
-let merge ls =
-  match ls with
-    [] -> []
-  | l::ls -> List.fold_left merge2 l ls
-
-let changes id vcs = List.map (fun (t,v) -> (t, [id,v])) vcs
-                   
-let to_string (t,evs) = Printf.sprintf "t=%d: %s" t (Misc.string_of_list ~f:Event.to_string ~sep:"," evs)
+val view: ?fname:string -> ?cmd:string -> fsm:Fsm.t -> Tevents.t list -> int
+    (** [view m evs] views a simulation result for FSM [m] by first writing a [.vcd] file 
+        and then launching a VCD viewer application. The name of the output file and
+        of the viewer application can be changed using the [fname] and [cmd] optional
+        arguments. Returns the issued command exit status. *)
