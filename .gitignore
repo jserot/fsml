@@ -20,5 +20,6 @@ examples/*/c/tb
 examples/*/vhdl/tb
 examples/*/vhdl/*.vcd
 examples/*/vhdl/fsm_*.vhd
+examples/*/test.dot
 attic/
 fsml.opam

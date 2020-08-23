@@ -1,3 +1,2 @@
-- VCD output for simulation
 - add precise column position when reporting PPX parse errors 
 - support for synchronous actions at the OCaml and C level
