@@ -13,10 +13,8 @@
 (package
   (name fsml)
   (synopsis "A library for describing and describing synchronous finite state machines")
-  (description "A library for describing and describing synchronous finite state machines")
   (depends
-    (dune (>= 2.0))
-    (menhir (>= 2.0))
+    (menhir (>= 20200624))
     (ocaml (>= 4.10))))
 
 (generate_opam_files true)
