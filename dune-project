@@ -15,6 +15,6 @@
   (synopsis "A library for describing and describing synchronous finite state machines")
   (depends
     (menhir (>= 20200624))
-    (ocaml (>= 4.10))))
+    (ocaml (>= 4.10 & < 4.11))))
 
 (generate_opam_files true)
