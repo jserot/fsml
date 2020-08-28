@@ -22,4 +22,3 @@ examples/*/vhdl/*.vcd
 examples/*/vhdl/fsm_*.vhd
 examples/*/test.dot
 attic/
-fsml.opam
