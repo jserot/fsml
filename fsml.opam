@@ -32,5 +32,5 @@ dev-repo: "git+https://github.com/jserot/fsml.git"
 
 url {
   src: "https://github.com/jserot/fsml/archive/0.2a.tar.gz"
-  checksum: "md5=d5dae09321680c1cf091f33d0eba8d2e"
+  checksum: "md5=d66b77322b4808f98575daac8853ed51"
 }
