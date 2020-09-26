@@ -14,7 +14,9 @@
   (name fsml)
   (synopsis "A library for describing and describing synchronous finite state machines")
   (depends
+    (ppxlib (>= 0.13.0))
+    (ppx_deriving_yojson (>= 3.5.3))
     (menhir (>= 20200624))
-    (ocaml (>= 4.10 & < 4.11))))
+    (ocaml (>= 4.10))))
 
 (generate_opam_files true)
