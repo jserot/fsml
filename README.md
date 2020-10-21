@@ -110,3 +110,12 @@ Depending on the example, this will
 
 The generated C and/or VHDL code can be tested by going to corresponding subdir and invoking
 `make` (you may have to adjust some definitions in the provided `Makefile`).
+
+*NOTE* : Under Linux and Windows, the `dotty` application supplied in the `graphviz` package is
+buggy. To view the generated `.dot` files, first convert it to the `gif` format using the
+`dot` command and open the result file with any `gif` viewer. For example
+
+```
+dot -T gif -o test.gif test.dot
+xv test.gif
+```
