@@ -27,6 +27,6 @@ let _ = Vcd.write ~fname:"test.vcd" ~fsm:f2 (stim @@@ res)
 
 (* Code generation *)
 
-let () = C.write ~dir:"./c" ~prefix:"fsm_genimp" f2
-let () = Vhdl.write ~dir:"./vhdl" ~prefix:"fsm_genimp" f2
+let () = C.write ~dir:"./c" ~prefix:"genimp" f2
+let () = Vhdl.write ~dir:"./vhdl" ~prefix:"genimp" f2
 

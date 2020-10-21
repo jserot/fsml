@@ -14,12 +14,10 @@ config-stamp
 .merlin
 CHANGELOG.html
 README.html
-examples/*/c/fsm_*.c
-examples/*/c/fsm_*.h
-examples/*/c/tb
-examples/*/vhdl/tb
-examples/*/vhdl/*.vcd
-examples/*/vhdl/fsm_*.vhd
+examples/*/c/
+!examples/*c/Makefile
+!examples/*c/tb.c
+examples/*/vhdl/
 examples/*/test.dot
 examples/*/*.gif
 attic/

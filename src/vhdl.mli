@@ -35,7 +35,7 @@ val cfg : config
 exception Error of string * string   (* where, message *)
 
 val write: ?dir:string -> prefix:string -> Fsm.t -> unit
-  (** [write fname m] writes in file [prefix.vhd] a representation of FSM [m] as a VHDL entity and architecture.
+  (** [write prefix m] writes in file [prefix.vhd] a representation of FSM [m] as a VHDL entity and architecture.
       The architecture is a synchronous FSM, with a [clk] signal and a asynchronous, active high, [rst] signal. 
       Transitions are performed on the rising edge of the [clk] signal.
       The generated file is written in the current working directory unless a target directory is specified

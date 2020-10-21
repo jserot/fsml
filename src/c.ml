@@ -92,11 +92,11 @@ let dump_state_case oc m (src, tss) =
   dump_transitions oc m src false tss;
   fprintf oc "      break;\n"
 
-let dump_impl fname m =
+let dump_impl prefix fname m =
   let open Seqmodel in
   let modname = "fsm_" ^ m.m_name in
   let oc = open_out fname in
-  fprintf oc "#include \"%s.h\"\n" modname;
+  fprintf oc "#include \"%s.h\"\n" prefix;
   fprintf oc "#include <stdio.h>\n\n";
   let ctx_comps = List.map fst (m.m_inps @ m.m_outps @ m.m_vars) in
   fprintf oc "void dump_ctx(ctx_t ctx)\n";
@@ -131,12 +131,12 @@ let dump_impl fname m =
   printf "Wrote file %s\n" fname;
   close_out oc
 
-let dump_intf fname m =
+let dump_intf prefix fname m =
   let open Seqmodel in
   let oc = open_out fname in
   let modname = "fsm_" ^ m.m_name in
-  fprintf oc "#ifndef _%s_h\n" modname;
-  fprintf oc "#define _%s_h\n\n" modname;
+  fprintf oc "#ifndef _%s_h\n" prefix;
+  fprintf oc "#define _%s_h\n\n" prefix;
   fprintf oc "#include \"%s\"\n\n" cfg.incl_file;
   fprintf oc "typedef struct {\n";
   List.iter (fun (id,ty) -> fprintf oc "  IN %s;\n" (string_of_typed_item (id,ty))) m.m_inps;
@@ -153,5 +153,5 @@ let write ?(dir="") ~prefix f =
   let m = Seqmodel.make f in
   let () = Misc.check_dir dir in
   let p = dir ^ Filename.dir_sep ^ prefix in
-  dump_intf (p ^ ".h") m;
-  dump_impl (p ^ ".c") m
+  dump_intf prefix (p ^ ".h") m;
+  dump_impl prefix (p ^ ".c") m
