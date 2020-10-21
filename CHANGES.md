@@ -1,5 +1,8 @@
 # Changes
 
+# 0.2.1 (Oct 21, 2020)
+* Updated interface for functions `C.write` and `Vhdl.write` 
+
 # 0.2 (Aug 14, 2020)
 * First "public" version
 

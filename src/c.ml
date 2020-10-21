@@ -149,7 +149,9 @@ let dump_intf fname m =
   printf "Wrote file %s\n" fname;
   close_out oc
 
-let write ~fname f = 
+let write ?(dir="") ~prefix f = 
   let m = Seqmodel.make f in
-  dump_intf (fname ^ ".h") m;
-  dump_impl (fname ^ ".c") m
+  let () = Misc.check_dir dir in
+  let p = dir ^ Filename.dir_sep ^ prefix in
+  dump_intf (p ^ ".h") m;
+  dump_impl (p ^ ".c") m

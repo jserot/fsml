@@ -40,5 +40,5 @@ let _ = Vcd.write ~fname:"test.vcd" ~fsm:f3 (st @@@ res)
 
 (* Code generation *)
 
-let () = C.write ~fname:"./c/fsm_pgcd" f3
-let () = Vhdl.write ~fname:"./vhdl/fsm_pgcd" f3
+let () = C.write ~dir:"./c" ~prefix:"fsm_pgcd" f3
+let () = Vhdl.write ~dir:"./vhdl" ~prefix:"fsm_pgcd" f3

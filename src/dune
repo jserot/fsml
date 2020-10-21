@@ -2,7 +2,7 @@
   (name fsml)
   (public_name fsml)
   (modules misc types builtins typing expr state guard action transition dot event tevents fsm clock simul vcd seqmodel c vhdl parse fsm_lexer fsm_parser)
-  (libraries yojson ppx_deriving_yojson.runtime)
+  (libraries unix yojson ppx_deriving_yojson.runtime)
   (preprocess (pps ppx_deriving.show ppx_deriving_yojson)))
 
 (ocamllex

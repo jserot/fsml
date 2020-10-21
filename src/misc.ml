@@ -53,3 +53,7 @@ let rec bit_size n = if n=0 then 0 else 1 + bit_size (n/2)
 let rec pow2 k = if k = 0 then 1 else 2 * pow2 (k-1)
 
 let quote_string s = "\"" ^ s ^ "\""                                             
+
+let check_dir path = 
+  if not (Sys.file_exists path && Sys.is_directory path)
+  then Unix.mkdir path 0o777
