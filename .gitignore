@@ -22,4 +22,5 @@ examples/*/c/*
 examples/*/vhdl/*
 !examples/*/vhdl/Makefile
 !examples/*/vhdl/tb.vhd
+!examples/*/vhdl/tb.gtkw
 attic/
