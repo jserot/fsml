@@ -89,7 +89,9 @@ Pre-requisites :
 
 * `ocaml` (>= 4.10.0) with the following packages installed
   - `dune`
+  - `menhir`
   - `yojson`
+  - `ppxlib`
   - `ppx_deriving`
 
 Download the source tree (`git clone https://github.com/jserot/fsml`).
@@ -119,3 +121,5 @@ buggy. To view the generated `.dot` files, first convert it to the `gif` format 
 dot -T gif -o test.gif test.dot
 xv test.gif
 ```
+
+FSML is also available as an [OPAM package](https://opam.ocaml.org/packages/fsml).
