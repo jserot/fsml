@@ -1,2 +1,4 @@
+- Fsm.defactorize
+- Add output valuations to state and bidir conv fns
 - add precise column position when reporting PPX parse errors 
 - support for synchronous actions at the OCaml and C level
