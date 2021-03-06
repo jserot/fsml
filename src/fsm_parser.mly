@@ -31,6 +31,7 @@
 %token ARROW
 %token WHEN
 %token WITH
+%token AND
 %token EOF
 
 (* Precedences and associativities for expressions *)
@@ -67,20 +68,30 @@ let mk_expr e = mk_typed_expr e (Types.TyVar (Types.new_type_var ()))
 
 fsm:
   | NAME COLON name=LID SEMICOLON
-    STATES COLON states=separated_nonempty_list(COMMA, UID) SEMICOLON
+    STATES COLON states=separated_nonempty_list(COMMA, state) SEMICOLON
     INPUTS COLON inps=separated_list(COMMA, iovar) SEMICOLON
     OUTPUTS COLON outps=separated_list(COMMA, iovar) SEMICOLON
     vars = optional(vars)
     TRANS COLON trans=nonempty_list(terminated(transition, SEMICOLON))
     ITRANS COLON itrans=itransition SEMICOLON EOF {
         { id = name;
-          states = states; 
+          states = states;
           inps = inps; 
           outps = outps; 
           vars = vars; 
           trans = trans;
           itrans = itrans } }
           
+state:
+  | id=UID ov=out_vals { id, ov }
+                          
+out_vals:
+  | (* Nothing *) { [] }
+  | WITH ovs=separated_nonempty_list(AND, out_val) { ovs }
+
+out_val:
+  | id=LID EQUAL e=expr  { (id,e) }
+
 vars:
   | VARS COLON vars=terminated(separated_list(COMMA, iovar),SEMICOLON) { vars }
 

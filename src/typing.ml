@@ -59,6 +59,20 @@ and type_application where tenv ty_fn args =
  *   | TyBool, TyInt _
  *   | _, _ -> raise (Illegal_cast e) *)
 
+let type_check_output_valuation tenv oenv state_id (o,v) =
+  (* Check that for output valuation [(o,v)], [o] is declared in [oenv] and [v] has a compliant type *)
+  let ty =
+    try
+      List.assoc o oenv
+    with Not_found ->
+      raise (Typing_error ("symbol " ^ o,  " assigned in state " ^ state_id, "not declared as output")) in
+  let ty' = type_expression tenv v in
+  try_unify "output" o ty ty'
+  
+
+let type_check_fsm_state_decl f tenv (id,ovs) =
+  List.iter (type_check_output_valuation tenv f.Fsm.outps id) ovs
+
 let type_check_fsm_action_ tenv act = match act with 
   | Action.Assign (id, exp) -> 
      let t = Types.type_instance @@ lookup_tenv "variable" id tenv id in
@@ -70,7 +84,7 @@ let type_check_fsm_guard_ tenv gexp =
   try_unify "guard" (Guard.to_string gexp) t Types.TyBool
 
 let type_check_fsm_state f s =
-  if not (List.mem s f.Fsm.states)
+  if not (List.mem_assoc s f.Fsm.states)
   then typing_error "state" s "invalid state"
 
 let type_check_fsm_transition f tenv (src,guards,actions,dst) =
@@ -138,6 +152,7 @@ let fsm_tenv ?(with_clk=false) f =
 
 let type_check_fsm ?(mono=false)  f =
   let tenv = fsm_tenv f in
+  List.iter (type_check_fsm_state_decl f tenv) f.states;
   List.iter (type_check_fsm_transition f tenv) f.trans;
   type_check_fsm_itransition f tenv f.itrans;
   type_clean_fsm ~mono f;

@@ -31,10 +31,13 @@ let output oc ?(options=default_options) m =
     let ini_id = "_ini" in
     let dump_istate () = 
       Printf.fprintf oc "%s [shape=point; label=\"\"; style = invis]\n" ini_id in
-    let dump_state id =
-      Printf.fprintf oc "%s [label = \"%s\", shape = %s, style = %s]\n"
+    let string_of_output_valuation vs =
+      Misc.string_of_list ~f:(function (n,v) -> "\\n" ^ n ^ "=" ^ Expr.to_string v) ~sep:"" vs in
+    let dump_state (id,oval) =
+      Printf.fprintf oc "%s [label = \"%s%s\", shape = %s, style = %s]\n"
         id
         id
+        (string_of_output_valuation oval)
         options.node_shape
         options.node_style in
     let string_of_guards guards = 

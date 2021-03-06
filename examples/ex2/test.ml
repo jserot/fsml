@@ -2,15 +2,15 @@ open Fsml
 
 let f2 = [%fsm {|
     name: gensig;
-    states: E0, E1;
+    states: E0 with s='0', E1 with s='1';
     inputs: start: bool;
     outputs: s: bool;
     vars: k: int<8>;
     trans:
-      E0 -> E1 when start='1' with k:=0, s:='1';
+      E0 -> E1 when start='1' with k:=0;
       E1 -> E1 when k<4 with k:=k+1;
-      E1 -> E0 when k=4 with s:='0';
-    itrans: -> E0 with s:='0';
+      E1 -> E0 when k=4;
+    itrans: -> E0;
     |}]
 
 let _ = Dot.write "test.dot" f2

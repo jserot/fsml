@@ -14,7 +14,7 @@
 
 type t = {
   m_name: string;
-  m_states: string list;
+  m_states: (string * Valuation.t) list;
   m_inps: (string * Types.t) list;
   m_outps: (string * Types.t) list;
   m_vars: (string * Types.t) list;  

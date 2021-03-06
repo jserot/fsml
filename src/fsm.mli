@@ -14,7 +14,7 @@
 
 type t = {
   id: string;  (** Name *)
-  states: State.t list;
+  states: (State.t * Valuation.t) list;
   inps: (string * Types.t) list;  (** Inputs *)
   outps: (string * Types.t) list; (** Outputs *)
   vars: (string * Types.t) list;  (** Local variables *)
@@ -23,7 +23,7 @@ type t = {
 } [@@deriving show {with_path=false}, yojson]
   (** The static description of a FSM *)
 
-(* { 2 JSON export/import} *)
+(** {2 JSON export/import} *)
        
 val to_string: t -> string
   (** [to_string m] writes a representation of FSM [m] as a string using the [Yojson] library. *)

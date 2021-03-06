@@ -2,7 +2,7 @@ open Fsml
 
 let f3 = [%fsm {|
     name: pgcd;
-    states: Idle, Comp;
+    states: Idle with rdy='1', Comp with rdy='0';
     inputs:
       start: bool,
       m: uint<8>,
@@ -14,11 +14,11 @@ let f3 = [%fsm {|
       a: uint<8>,
       b: uint<8>;
     trans:
-        Idle -> Comp when start='1' with a:=m, b:=n, rdy:='0';
+        Idle -> Comp when start='1' with a:=m, b:=n;
         Comp -> Comp when a<b with b:=b-a;
         Comp -> Comp when a>b with a:=a-b;
-        Comp -> Idle when a=b with rdy:='1', r:=a;
-    itrans: -> Idle with rdy:='1';
+        Comp -> Idle when a=b with r:=a;
+    itrans: -> Idle;
     |}] 
 
 let _ = Dot.write "test.dot" f3

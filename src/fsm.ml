@@ -12,7 +12,7 @@
 
 type t = {
   id: string;
-  states: State.t list;
+  states: (State.t * Valuation.t) list;
   inps: (string * Types.t) list;
   outps: (string * Types.t) list;
   vars: (string * Types.t) list;

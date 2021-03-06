@@ -7,16 +7,18 @@ open Fsml
 open Fsm
 
 let list_make f lo hi =
+  (* [list_make f lo hi] is [[f lo; f (lo+1); ...; f hi]] *)
   let rec mk i = if i <= hi then f i :: mk (i+1) else [] in
   mk lo
   
 let genimp n =
   let mk_state i = "E" ^ string_of_int i in
+  let mk_attr_state i = mk_state i, [] in
   let mk_trans i = (mk_state i, [], [], mk_state (i+1)) in
   {
     id="gensig";
-    states="E0" :: list_make mk_state 1 n;
-    itrans="E0", [];
+    states=("E0",[]) :: list_make mk_attr_state 1 n;
+    itrans="E0", [[%fsm_action "s:='0'"]];
     inps=["start", Types.TyBool];
     outps=["s", Types.TyBool];
     vars=[];  (* No local var here *)

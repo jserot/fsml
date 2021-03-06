@@ -84,7 +84,7 @@ let register_vcd_signal (name,ty) acc =
 
 let register_fsm_signals f acc =
      List.fold_left register_signal acc (f.Fsm.inps @ f.Fsm.outps @ f.Fsm.vars)
-  |> register_vcd_signal ("state", TyEnum ("t_state", f.Fsm.states))
+  |> register_vcd_signal ("state", TyEnum ("t_state", List.map fst f.Fsm.states))
 
 exception Error of string
 

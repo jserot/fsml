@@ -151,7 +151,7 @@ let dump_module_arch oc m =
   let open Seqmodel in
   let modname = m.m_name in
   fprintf oc "architecture RTL of %s is\n" modname;
-  fprintf oc "  type t_%s is ( %s );\n" cfg.state_var (Misc.string_of_list ~f:Fun.id ~sep:", " m.m_states);
+  fprintf oc "  type t_%s is ( %s );\n" cfg.state_var (Misc.string_of_list ~f:fst ~sep:", " m.m_states);
   fprintf oc "  signal %s: t_state;\n" cfg.state_var;
   if cfg.act_sem = Synchronous then 
     List.iter
