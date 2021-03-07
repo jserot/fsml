@@ -87,8 +87,16 @@ let dump_transitions oc m src after tss =
    end;
    if after then fprintf oc "      }\n"
      
+let dump_output_valuation oc m state =
+  let open Seqmodel in
+  assert (List.mem_assoc state m.m_states);
+  List.iter
+    (fun (o,e) -> fprintf oc "      %s = %s;\n" (string_of_comp m o) (string_of_expr m e))
+    (List.assoc state m.m_states)
+
 let dump_state_case oc m (src, tss) =
   fprintf oc "    case %s:\n" src;
+  dump_output_valuation oc m src;
   dump_transitions oc m src false tss;
   fprintf oc "      break;\n"
 

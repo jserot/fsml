@@ -22,9 +22,8 @@ let check_fsm m = Typing.type_check_fsm m
 let check_stimuli m st = Typing.type_check_stimuli m st
 
 let output_state_events m state =
-  (try List.assoc state m.states
-  with Not_found -> failwith "Simul.output_state_events: invalid state") (* should not happen *)
-  |> List.map (fun (o,e) -> Action.Assign (o,e))
+  assert (List.mem_assoc state m.states);
+  List.assoc state m.states |> List.map (fun (o,e) -> Action.Assign (o,e))
 
 let step ctx m = 
   match List.find_opt (Transition.is_fireable ctx.state (Builtins.eval_env @ ctx.env)) m.trans with
