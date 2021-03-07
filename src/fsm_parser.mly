@@ -90,7 +90,7 @@ out_vals:
   | WITH ovs=separated_nonempty_list(AND, out_val) { ovs }
 
 out_val:
-  | id=LID EQUAL e=expr  { (id,e) }
+  | id=LID EQUAL e=const_expr  { (id,e) }
 
 vars:
   | VARS COLON vars=terminated(separated_list(COMMA, iovar),SEMICOLON) { vars }
@@ -163,6 +163,12 @@ simple_expr:
       { mk_int_expr (Expr.EInt (-c)) }
   | LPAREN e = expr RPAREN
       { e }
+
+const_expr:
+  | c = INT
+      { mk_int_expr (Expr.EInt c) }
+  | c = BOOL
+      { mk_bool_expr (Expr.EBool c) }
 
 (* TYPE EXPRESSIONs *)
 

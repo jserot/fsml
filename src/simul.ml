@@ -21,10 +21,16 @@ type ctx = {
 let check_fsm m = Typing.type_check_fsm m
 let check_stimuli m st = Typing.type_check_stimuli m st
 
+let output_state_events m state =
+  (try List.assoc state m.states
+  with Not_found -> failwith "Simul.output_state_events: invalid state") (* should not happen *)
+  |> List.map (fun (o,e) -> Action.Assign (o,e))
+
 let step ctx m = 
   match List.find_opt (Transition.is_fireable ctx.state (Builtins.eval_env @ ctx.env)) m.trans with
     | Some (src, _, acts, dst) -> 
-       let evs = List.concat @@ List.map (Action.perform (Builtins.eval_env @ ctx.env)) acts in
+       let acts' = acts @ output_state_events m dst in
+       let evs = List.concat @@ List.map (Action.perform (Builtins.eval_env @ ctx.env)) acts' in
        (if src <> dst then ("state",Expr.Enum dst)::evs else evs),
        { state = dst;
          env = List.fold_left Expr.update_env ctx.env evs }
@@ -70,7 +76,8 @@ let run ?ctx ?(stop_when=[]) ?(stop_after=0) ?(trace=false) ~stim m =
        []
     | None, (s0,acts0) ->
        let env0 = List.map (fun (id,_) -> id, Expr.Unknown) (m.inps @ m.outps @ m.vars) in
-       let evs0 = List.concat @@ List.map (Action.perform (Builtins.eval_env @ env0)) acts0 in
+       let acts0' = acts0 @ output_state_events m s0 in
+       let evs0 = List.concat @@ List.map (Action.perform (Builtins.eval_env @ env0)) acts0' in
        { state = s0; env = List.fold_left Expr.update_env env0 evs0 },
        [0, ("state",Expr.Enum s0)::evs0] in
   if trace then trace_log := [0,ctx];
