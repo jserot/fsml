@@ -5,6 +5,8 @@ all: run view
 
 view:
 	$(DOTVIEWER) test.dot
+	$(DOTVIEWER) test_bis.dot
+	$(DOTVIEWER) test_ter.dot
 	$(VCDVIEWER) test.vcd test.gtkw
 
 run: 

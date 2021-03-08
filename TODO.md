@@ -1,4 +1,4 @@
 - Fsm.defactorize
-- add fns to move output valuations btw states and transitions
+- toplevel
 - add precise column position when reporting PPX parse errors 
 - support for synchronous actions at the OCaml and C level

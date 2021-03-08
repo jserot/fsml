@@ -45,6 +45,8 @@ and e_val =
 
 val of_value: e_val -> t
 
+val is_const: t -> bool
+  
 (** {2 Builders} *)
 
 val mk_bool_expr: e_desc -> t

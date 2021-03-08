@@ -14,7 +14,7 @@ config-stamp
 .merlin
 CHANGELOG.html
 README.html
-examples/*/test.dot
+examples/*/test*.dot
 examples/*/*.gif
 examples/*/c/*
 !examples/*/c/Makefile

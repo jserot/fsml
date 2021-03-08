@@ -59,3 +59,9 @@ let check_dir path =
   then Unix.mkdir path 0o777
 
 let spaces n = String.make n ' '
+
+let replace_assoc k v l =
+  let rec scan = function 
+    [] -> []
+    | (k',v')::rest -> if k = k' then (k,v)::scan rest else (k',v')::scan rest  in
+  scan l

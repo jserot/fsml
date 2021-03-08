@@ -30,3 +30,17 @@ let _ = Vcd.write ~fname:"test.vcd" ~fsm:f2 (stim @@@ res)
 let () = C.write ~dir:"./c" ~prefix:"genimp" f2
 let () = Vhdl.write ~dir:"./vhdl" ~prefix:"genimp" f2
 
+(* Transformation to Mealy-style FSM (with output assignation on transitions instead of states) *)
+
+let f2bis = Fsm.mealy_outps ~outps:["s"] f2            
+
+let _ = Dot.write "test_bis.dot" f2bis
+
+(* Back to Moore-style *)
+
+let f2ter = Fsm.moore_outps ~outps:["s"] f2bis            
+
+let _ = Dot.write "test_ter.dot" f2ter
+
+          
+

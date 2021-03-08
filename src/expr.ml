@@ -47,6 +47,12 @@ let of_value v = match v with
   | Bool v -> { e_desc=EBool v; e_typ=Types.TyBool }
   | _ -> failwith "Expr.of_value"
 
+let is_const e = 
+  match e.e_desc with
+  | EInt _ -> true
+  | EBool _ -> true
+  | _ -> false
+
 let mk_bool_expr e = { e_desc = e; e_typ = Types.TyBool }
 let mk_int_expr e = { e_desc = e; e_typ = Types.type_int () }
                    
