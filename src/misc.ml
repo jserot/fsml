@@ -57,3 +57,5 @@ let quote_string s = "\"" ^ s ^ "\""
 let check_dir path = 
   if not (Sys.file_exists path && Sys.is_directory path)
   then Unix.mkdir path 0o777
+
+let spaces n = String.make n ' '

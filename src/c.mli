@@ -22,7 +22,7 @@ val cfg: config
 exception Error of string * string   (* where, message *)
 
 val write: ?dir:string -> prefix:string -> Fsm.t -> unit
-  (** [write prefix m] writes in files [prefix.h] and [fprefix.c] a representation of FSM [m] as a C function.
+  (** [write prefix m] writes in files [prefix.h] and [prefix.c] a representation of FSM [m] as a C function.
       This function has prototype [void fsm_xxx(ctx_t *ctx)], where [xxx] is [m.m_id] and [ctx_t] is the
       type of a structure recording the value of inputs and outputs of the machine.
       Each call to the [fsm_xxx] function will correspond to one execution step of the machine: it 

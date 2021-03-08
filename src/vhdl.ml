@@ -144,8 +144,14 @@ let dump_state oc m (src,tss) =
   | _ -> dump_sync_transitions oc src false m tss
 
 let dump_state_case oc m (src, tss) =
-    fprintf oc "      when %s =>\n" src;
-    dump_state oc m (src,tss)
+  fprintf oc "      when %s =>\n" src;
+  dump_state oc m (src,tss)
+
+let dump_state_outputs oc (s,oval) = 
+  fprintf oc "    when %s =>\n" s;
+  List.iter
+    (fun (o,e) -> fprintf oc "      %s <= %s;\n" o (string_of_expr e))
+    oval
 
 let dump_module_arch oc m =
   let open Seqmodel in
@@ -164,7 +170,7 @@ let dump_module_arch oc m =
       (fun (id,ty) -> fprintf oc "    variable %s: %s;\n" id (string_of_type ty))
       m.m_vars;
   fprintf oc "  begin\n";
-  fprintf oc "    if ( %s='1' ) then\n" cfg.reset_sig;
+  fprintf oc "    if %s='1' then\n" cfg.reset_sig;
   fprintf oc "      %s <= %s;\n" cfg.state_var (fst m.m_init);
   List.iter (dump_action oc "      " m) (snd m.m_init);
   fprintf oc "    elsif rising_edge(%s) then \n" cfg.clk_sig;
@@ -177,6 +183,12 @@ let dump_module_arch oc m =
       fprintf oc "    end case;\n"
   end;
   fprintf oc "    end if;\n";
+  fprintf oc "  end process;\n";
+  fprintf oc "  process(%s)\n" cfg.state_var;
+  fprintf oc "  begin\n";
+  fprintf oc "    case %s is\n" cfg.state_var;
+  List.iter (dump_state_outputs oc) m.m_states;
+  fprintf oc "    end case;\n";
   fprintf oc "  end process;\n";
   fprintf oc "end architecture;\n"
 

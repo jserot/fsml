@@ -117,14 +117,14 @@ let dump_impl prefix fname m =
   fprintf oc "{\n";
   List.iter (fun (id,ty) -> fprintf oc "  static %s;\n" (string_of_typed_item (id,ty))) m.m_vars;
   if List.length m.m_states > 1 then 
-    fprintf oc "  static enum { %s } %s = %s;\n"
+    fprintf oc "  static enum { %s } %s;\n"
       (Misc.string_of_list ~f:fst ~sep:", " m.m_states)
-      cfg.state_var
-      (fst m.m_init);
+      cfg.state_var;
   fprintf oc "  static int _init = 1;\n";
   fprintf oc "  if ( _init ) {\n";
   List.iter (dump_action oc m "    ") (snd m.m_init);
-  fprintf oc "    _init=0; \n";
+  fprintf oc "    %s=%s;\n" cfg.state_var (fst m.m_init);
+  fprintf oc "    _init=0;\n";
   fprintf oc "    }\n";
   begin match m.m_body with
     [] -> () (* should not happen *)
