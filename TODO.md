@@ -1,4 +1,4 @@
-- Fsm.defactorize
+- rewrite types.ml and typing.ml with a polymorphic 'a var type
 - toplevel
 - add precise column position when reporting PPX parse errors 
 - support for synchronous actions at the OCaml and C level

@@ -32,6 +32,7 @@
 %token WHEN
 %token WITH
 %token AND
+%token DOTDOT
 %token EOF
 
 (* Precedences and associativities for expressions *)
@@ -174,12 +175,16 @@ const_expr:
 
 type_expr:
   | TYBOOL { Types.TyBool }
-  | TYINT sz=int_size { Types.TyInt (Types.TySigned, sz) }
-  | TYUINT sz=int_size { Types.TyInt (Types.TyUnsigned, sz) }
+  | TYINT rg=int_range { let sz = Types.SzVar (Types.new_size_var ()) in Types.TyInt (Types.TySigned, sz, rg) }
+  | TYINT sz=int_size { let rg = Types.RgVar (Types.new_range_var ()) in Types.TyInt (Types.TySigned, sz, rg) }
+  | TYUINT sz=int_size { let rg = Types.RgVar (Types.new_range_var ()) in Types.TyInt (Types.TyUnsigned, sz, rg) }
 
 int_size:
   | (* Nothing *) { Types.SzVar (Types.new_size_var ()) }
   | LT sz=INT GT { Types.SzConst sz }
+
+int_range:
+  | LT lo=INT DOTDOT hi=INT GT { Types.RgConst {lo=lo;hi=hi} }
 
 (* Simulation stimuli *)
 

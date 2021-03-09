@@ -40,8 +40,23 @@ val moore_outps : ?outps:string list -> t -> t
       - the corresponding action does not occur on all transitions leading to state [s],
       - the value assigned to output [o] is not a constant,
       - not all actions assign the same value to [o]
-      If [outps] is empty, the transformation is applied to all outputs. Raises [Unknown_output] if 
+      If [outps] is omitted ot empty, the transformation is applied to all outputs. Raises [Unknown_output] if 
       [outps] contains a symbol not declared as output. *)
+
+exception Unknown_var of string
+exception Illegal_var_type of string * Types.t
+                            
+val defactorize: vars:(string * Expr.e_val) list -> ?cleaned:bool -> t -> t
+  (** [defactorize vars m] returns an equivalent FSM obtained by removing variable listed in [vars] from [m] and 
+      introducing new states accordingly.
+      The value attached to each variable is used to select the initial state in the defactorized FSM. 
+      Unreachable states are removed from the
+      resulting automata unlesse the optional argument [clean] is set to false. Raises {!Unknown_var} if
+      [vars] contains a symbol not declared as variable. Raises {!Illegal_var_type} if
+      the specified var(s) do(es) not have an enumerable type (i.e. have not been declared with a range). *)
+  
+val clean: t -> t
+  (** [clean m] removes all unreachable states (and associated transitions) from m *)
   
 (** {2 JSON export/import} *)
        

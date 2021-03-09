@@ -43,6 +43,7 @@ rule main = parse
   | "," { COMMA }
   | "->" { ARROW }
   | ":" { COLON }
+  | ".." { DOTDOT }
   | "=" { EQUAL }
   | ":=" { COLEQ }
   | "!="    { NOTEQUAL }

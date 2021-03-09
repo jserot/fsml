@@ -26,6 +26,13 @@ let list_make ~f ~lo ~hi =
     else [] in
   mk lo
 
+
+let flat_map f l = List.concat (List.map f l)
+
+let cart_prod l1 l2 =
+  let prod p l1 l2 = flat_map (function e1 -> List.map (p e1) l2) l1 in
+  prod (fun x y -> x,y) l1 l2
+
 let list_parse ~parse_item ~sep s =
  let rec parse s =
   match Stream.peek s with

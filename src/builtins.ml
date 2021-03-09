@@ -15,12 +15,16 @@ open Types
 let type_arithm () = 
   let sg = Types.new_type_var () in
   let sz = Types.new_size_var () in
-  { ts_tparams=[]; ts_sparams=[sz];
-    ts_body=TyArrow (TyProduct [TyInt (TyVar sg, SzVar sz); TyInt (TyVar sg, SzVar sz)], TyInt (TyVar sg, SzVar sz)) }
+  let rg = Types.new_range_var () in
+  { ts_tparams=[]; ts_sparams=[sz]; ts_rparams=[rg];
+    ts_body=TyArrow
+              (TyProduct
+                 [TyInt (TyVar sg, SzVar sz, RgVar rg); TyInt (TyVar sg, SzVar sz, RgVar rg)],
+               TyInt (TyVar sg, SzVar sz, RgVar rg)) }
    
 let type_compar () = 
   let tv = Types.new_type_var () in
-  { ts_tparams=[tv]; ts_sparams=[]; ts_body=TyArrow (TyProduct [TyVar tv; TyVar tv], TyBool) }
+  { ts_tparams=[tv]; ts_sparams=[]; ts_rparams=[]; ts_body=TyArrow (TyProduct [TyVar tv; TyVar tv], TyBool) }
 
 exception Unknown_value
         

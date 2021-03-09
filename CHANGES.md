@@ -4,6 +4,7 @@
 * output valuations can now be added to states (see for inst. `examples/ex{2,3}`)
 * added functions `Fsm.mealy_outps`  and `Fsm.moore_outps` to move output valuations 
   from state to transitions and _vice versa_
+* added function `Fsm.defactorize` to defactorize an FSM wrt. to local variables
 
 # 0.2.1 (Oct 21, 2020)
 * updated interface for functions `C.write` and `Vhdl.write` 

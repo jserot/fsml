@@ -13,7 +13,7 @@
 (** Types *)
 
 type t =
-  | TyInt of t * size (** [t] is for signness *)
+  | TyInt of t * int_size * int_range (** [t] is for signness *)
   | TyBool
   | TyArrow of t * t  (** Internal use only *)
   | TyProduct of t list  (** Internal use only *)
@@ -22,11 +22,19 @@ type t =
   | TyUnsigned  (** Phantom type *)
   [@@deriving show {with_path=false}, yojson]
 
-and size =
+and int_size =
   | SzConst of int
-  | SzVar of size var
+  | SzVar of int_size var
   [@@deriving show {with_path=false}, yojson]
 
+and int_range =
+  | RgConst of range
+  | RgVar of int_range var
+  [@@deriving show {with_path=false}, yojson]
+
+and range = { lo: int; hi: int }
+  [@@deriving show {with_path=false}, yojson]
+          
 and 'a var =
   { stamp: string;
     mutable value: 'a value }
@@ -39,7 +47,8 @@ and 'a value =
 
 type typ_scheme =
   { ts_tparams: (t var) list;
-    ts_sparams: (size var) list;
+    ts_sparams: (int_size var) list;
+    ts_rparams: (int_range var) list;
     ts_body: t }
   [@@deriving show {with_path=false}, yojson]
 
@@ -48,11 +57,13 @@ type typ_scheme =
 val new_type_var: unit -> t var
   (** [new_type_var ()] returns a fresh type variable *)
   
-val new_size_var: unit -> size var
+val new_size_var: unit -> int_size var
   (** [new_size_var ()] returns a fresh size variable *)
   
+val new_range_var: unit -> int_range var
+  (** [new_range_var ()] returns a fresh range variable *)
+  
 val type_int: unit -> t
-  (** [type_int ()] is [TyInt (SzVar (new_size_var ()))] *)
 
 val trivial_scheme: t -> typ_scheme
 

@@ -51,7 +51,7 @@ type vcd_type =
 let vcd_type_of ty =
   match Types.real_type ty with
   | Types.TyBool -> TyBool
-  | Types.TyInt (sg, sz) ->
+  | Types.TyInt (sg, sz, _) ->
      let sg' = match sg with | Types.TyUnsigned -> true | _ -> false in
      let sz' = match sz with | SzConst n -> n | _ -> cfg.default_int_size in
      TyInt (sg', sz') 

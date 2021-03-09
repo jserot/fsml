@@ -53,15 +53,23 @@ let is_const e =
   | EBool _ -> true
   | _ -> false
 
+let is_var_test v e =
+  match e.e_desc with
+  | EBinop (op, {e_desc=EVar v'; _}, _)
+  | EBinop (op, _, {e_desc=EVar v'; _})  ->
+      v'=v && List.mem op ["="; "<"; ">"; "<="; ">=" ]
+  | _ -> false
+       
 let mk_bool_expr e = { e_desc = e; e_typ = Types.TyBool }
 let mk_int_expr e = { e_desc = e; e_typ = Types.type_int () }
-                   
+
 type env = (ident * e_val) list
   [@@deriving show]
 
 exception Unbound_id of ident
 exception Unknown_id of ident
 exception Illegal_expr of t
+exception Illegal_value of e_val
 
 let lookup_env env id = 
   try
@@ -101,5 +109,7 @@ let string_of_value v = match v with
   | Unknown -> "<unknown>"
   | Enum s -> s
 
-
+let bool_val v = match v with Bool v -> v | _ -> raise (Illegal_value v)
+let int_val v = match v with Int v -> v | _ -> raise (Illegal_value v)
+                   
 

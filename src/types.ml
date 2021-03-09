@@ -11,7 +11,7 @@
 (**********************************************************************)
 
 type t =
-  | TyInt of t * size (** [t] is for signness *)
+  | TyInt of t * int_size * int_range (** [t] is for signness *)
   | TyBool
   | TyArrow of t * t  (** Internal use only *)
   | TyProduct of t list  (** Internal use only *)
@@ -20,11 +20,19 @@ type t =
   | TyUnsigned  (** Phantom type *)
   [@@deriving show {with_path=false}, yojson]
 
-and size =
+and int_size =
   | SzConst of int
-  | SzVar of size var
+  | SzVar of int_size var
   [@@deriving show {with_path=false}, yojson]
 
+and int_range =
+  | RgConst of range
+  | RgVar of int_range var
+  [@@deriving show {with_path=false}, yojson]
+
+and range = { lo: int; hi: int }
+  [@@deriving show {with_path=false}, yojson]
+          
 and 'a var =
   { stamp: string;
     mutable value: 'a value }
@@ -37,7 +45,8 @@ and 'a value =
 
 type typ_scheme =
   { ts_tparams: (t var) list;
-    ts_sparams: (size var) list;
+    ts_sparams: (int_size var) list;
+    ts_rparams: (int_range var) list;
     ts_body: t }
   [@@deriving show {with_path=false}, yojson]
 
@@ -51,10 +60,11 @@ let make_var () = { value = Unknown; stamp=new_stamp () }
 
 let new_type_var () = make_var ()
 let new_size_var () = make_var ()
+let new_range_var () = make_var ()
 
-let type_int () = TyInt (TyVar (new_type_var ()), SzVar (new_size_var ()))
+let type_int () = TyInt (TyVar (new_type_var ()), SzVar (new_size_var ()), RgVar (new_range_var()))
 
-let trivial_scheme t = { ts_tparams=[]; ts_sparams=[]; ts_body=t }
+let trivial_scheme t = { ts_tparams=[]; ts_sparams=[]; ts_rparams=[]; ts_body=t }
                      
 (* Path compression *)
 
@@ -72,9 +82,16 @@ let rec size_repr = function
       sz
   | sz -> sz
 
+let rec range_repr = function
+  | RgVar ({value = Known rg1; _} as var) ->
+      let rg = range_repr rg1 in
+      var.value <- Known rg;
+      rg
+  | rg -> rg
+
 let rec real_type ty = 
   match type_repr ty with
-  | TyInt (sg, sz) -> TyInt (real_type sg, real_size sz)
+  | TyInt (sg, sz, rg) -> TyInt (real_type sg, real_size sz, real_range rg)
   | TyVar { value=Known ty'; _} -> ty'
   | ty -> ty
 
@@ -83,10 +100,15 @@ and real_size sz =
   | SzVar { value=Known sz'; _} -> sz'
   | sz -> sz
 
+and real_range rg = 
+  match range_repr rg with
+  | RgVar { value=Known rg'; _} -> rg'
+  | rg -> rg
+
 exception Polymorphic of t
                        
 let rec mono_type = function
-  | TyInt (sg, sz) as t -> TyInt (mono_type sg, mono_size t sz)
+  | TyInt (sg, sz, rg) as t -> TyInt (mono_type sg, mono_size t sz, mono_range t rg)
   | TyArrow (t1, t2) -> TyArrow (mono_type t1, mono_type t2)
   | TyProduct ts -> TyProduct (List.map mono_type ts)
   | TyVar ({value = Known ty1; _}) -> mono_type ty1
@@ -97,6 +119,11 @@ and mono_size t = function
   | SzVar ({value = Known sz1; _}) -> mono_size t sz1
   | SzVar ({value = Unknown; _}) -> raise (Polymorphic t)
   | sz -> sz 
+
+and mono_range t = function
+  | RgVar ({value = Known rg1; _}) -> mono_range t rg1
+  | RgVar ({value = Unknown; _}) -> raise (Polymorphic t)
+  | rg -> rg 
 
 (* Unification *)
 
@@ -117,9 +144,10 @@ let rec unify ty1 ty2 =
       occur_check var ty;
       var.value <- Known ty
   | TyBool, TyBool -> ()
-  | TyInt (sg1,sz1), TyInt (sg2,sz2) ->
+  | TyInt (sg1,sz1,rg1), TyInt (sg2,sz2,rg2) ->
      unify sg1 sg2;
-     unify_size (val1,val2) sz1 sz2
+     unify_size (val1,val2) sz1 sz2;
+     unify_range (val1,val2) rg1 rg2
   | TyArrow(ty1, ty2), TyArrow(ty1', ty2') ->
       unify ty1 ty1';
       unify ty2 ty2'
@@ -133,22 +161,26 @@ let rec unify ty1 ty2 =
 and unify_size (ty1,ty2) sz1 sz2 =
   let val1 = real_size sz1
   and val2 = real_size sz2 in
-  if val1 == val2 then
-    ()
+  if val1 == val2 then ()
   else
   match (val1, val2) with
-    | SzConst s1, SzConst s2 when s1 = s2 ->
-        ()
-    | SzVar var1, SzVar var2 when var1 == var2 ->  (* This is hack *)
-        ()
-    | SzVar var, sz ->
-        (* occur_check (ty1,ty2) var sz; *)
-        var.value <- Known sz
-    | sz, SzVar var ->
-        (* occur_check (ty1,ty2) var sz; *)
-        var.value <- Known sz
-    | _, _ ->
-        raise (TypeConflict(ty1, ty2))
+    | SzConst s1, SzConst s2 when s1 = s2 -> ()
+    | SzVar var1, SzVar var2 when var1 == var2 -> ()  (* This is hack *)
+    | SzVar var, sz -> var.value <- Known sz
+    | sz, SzVar var -> var.value <- Known sz
+    | _, _ -> raise (TypeConflict(ty1, ty2))
+
+and unify_range (ty1,ty2) rg1 rg2 =  (* TODO: to be shared with [unify_size] ! *)
+  let val1 = real_range rg1
+  and val2 = real_range rg2 in
+  if val1 == val2 then ()
+  else
+  match (val1, val2) with
+    | RgConst r1, RgConst r2 when r1 = r2 -> ()
+    | RgVar var1, RgVar var2 when var1 == var2 -> ()  (* This is hack *)
+    | RgVar var, rg -> var.value <- Known rg
+    | rg, RgVar var -> var.value <- Known rg
+    | _, _ -> raise (TypeConflict(ty1, ty2))
 
 and occur_check var ty =
   let test s =
@@ -159,7 +191,7 @@ and occur_check var ty =
         ()
   in test ty
 
-let rec copy_type tvbs svbs ty =
+let rec copy_type tvbs svbs rvbs ty =
   let rec copy ty = 
     match type_repr ty with
     | TyVar var as ty ->
@@ -168,8 +200,8 @@ let rec copy_type tvbs svbs ty =
         with Not_found ->
             ty
         end
-    | TyInt (sg, sz) ->
-       TyInt (copy sg, copy_size svbs sz)
+    | TyInt (sg, sz, rg) ->
+       TyInt (copy sg, copy_size svbs sz, copy_range rvbs rg)
     | TyArrow (ty1, ty2) ->
        TyArrow (copy ty1, copy ty2)
     | TyProduct ts ->
@@ -187,20 +219,32 @@ and copy_size svbs sz =
       end
   | sz -> sz
 
+and copy_range rvbs rg =
+  match range_repr rg with
+  | RgVar var as rg ->
+      begin try
+        List.assq var rvbs 
+      with Not_found ->
+        rg
+      end
+  | rg -> rg
+
 let type_instance ts =
-  match ts.ts_tparams, ts.ts_sparams with
-  | [], [] -> ts.ts_body
-  | tparams, sparams ->
+  match ts.ts_tparams, ts.ts_sparams, ts.ts_rparams with
+  | [], [], [] -> ts.ts_body
+  | tparams, sparams, rparams ->
       let unknown_ts = List.map (fun var -> (var, TyVar (new_type_var()))) tparams in
       let unknown_ss = List.map (fun var -> (var, SzVar (new_size_var()))) sparams in
-      copy_type unknown_ts unknown_ss ts.ts_body
+      let unknown_rs = List.map (fun var -> (var, RgVar (new_range_var()))) rparams in
+      copy_type unknown_ts unknown_ss unknown_rs ts.ts_body
 
 (* Printing *)
    
 let rec to_string t = match t with
   | TyBool -> "bool"
   (* | TyInt (sg, sz) -> string_of_signness sg ^ string_of_size sz *)
-  | TyInt (sg, sz) -> "int<" ^ to_string sg ^ "," ^ string_of_size sz ^ ">"
+  | TyInt (_, _, RgConst r) -> "int<" ^ string_of_int r.lo ^ ".." ^ string_of_int r.hi ^ ">" (* Special case *)
+  | TyInt (sg, sz, _) -> "int<" ^ to_string sg ^ "," ^ string_of_size sz ^ ">"
   | TyArrow (t1, t2) -> to_string t1 ^ "->" ^ to_string t2
   | TyProduct ts -> Misc.string_of_list ~f:to_string ~sep:"*" ts
   | TyVar v -> v.stamp

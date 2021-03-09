@@ -1,0 +1,27 @@
+[*]
+[*] GTKWave Analyzer v3.3.54 (w)1999-2014 BSI
+[*] Sat Aug 22 16:52:53 2020
+[*]
+[dumpfile] "/Users/jserot/Dev/ml/fsml/examples/ex2/test.vcd"
+[dumpfile_mtime] "Sat Aug 22 16:52:27 2020"
+[dumpfile_size] 339
+[savefile] "/Users/jserot/Dev/ml/fsml/examples/ex2/test.gtkw"
+[timestart] 0
+[size] 981 293
+[pos] 86 72
+*-1.247251 7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 193
+[signals_width] 111
+[sst_expanded] 1
+[sst_vpaned_height] 60
+@28
+top.clk
+top.start
+@29
+top.state
+@24
+top.k[7:0]
+@28
+top.s
+[pattern_trace] 1
+[pattern_trace] 0

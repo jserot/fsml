@@ -46,6 +46,8 @@ and e_val =
 val of_value: e_val -> t
 
 val is_const: t -> bool
+
+val is_var_test: string -> t -> bool 
   
 (** {2 Builders} *)
 
@@ -72,5 +74,9 @@ val update_env: env -> ident * e_val -> env
 exception Unbound_id of ident
 exception Unknown_id of ident
 exception Illegal_expr of t
+exception Illegal_value of e_val
 
 val eval: env -> t -> e_val
+
+val bool_val: e_val -> bool                        
+val int_val: e_val -> int                        

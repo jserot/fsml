@@ -28,7 +28,7 @@ exception Error of string * string   (* where, message *)
 
 let string_of_type t = match t with 
   | Types.TyBool -> "int"
-  | Types.TyInt (sg, _) when Types.real_type sg = TyUnsigned-> "unsigned int"
+  | Types.TyInt (sg, _, _) when Types.real_type sg = TyUnsigned-> "unsigned int"
   | Types.TyInt _ -> "int"
   | _ -> failwith ("C backend: illegal type: " ^ Types.to_string t)
 

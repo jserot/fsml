@@ -98,6 +98,70 @@ let moore_outps ?(outps=[]) m =
     | _ -> outps in
   List.fold_left moore_outp m os
 
+exception Unknown_var of string
+exception Illegal_var_type of string * Types.t
+
+let clean m =
+  let reachable_states =
+    List.fold_left
+      (fun acc (_,_,_,dst) -> if List.mem dst acc then acc else dst::acc)
+      []
+      m.trans
+    @ [fst m.itrans] in
+  { m with states = List.map (fun s -> s, List.assoc s m.states) reachable_states;
+           trans = List.filter (fun (src,_,_,_) -> List.mem src reachable_states) m.trans
+  }
+
+let defact ~cleaned m (var,range,ival) =
+  let dom_v = Misc.list_make ~f:(fun v -> Expr.Int v) ~lo:range.Types.lo ~hi:range.Types.hi in 
+  let remove_guard guards = List.filter (Fun.negate @@ Expr.is_var_test var) guards in
+  let remove_act acts = List.filter (function Action.Assign(v,_) when v=var -> false | _ -> true) acts in
+  let filter_domain (guards,acts) (u,u') =
+    (* Tells whether a pair of valuations [(u,u')] for variable [var] is compatible with the
+     *    specified transition guards and actions *)
+    let test_guard u expr =
+      if Expr.is_var_test var expr
+      then Expr.bool_val (Expr.eval (Builtins.eval_env @ [var, u]) expr)
+      else true in
+    let test_guards u = List.for_all (test_guard u) guards in
+    let test_act u u' act = match act with
+      | Action.Assign (v,exp) when v=var ->
+         Expr.eval (Builtins.eval_env @ [var, u]) exp = u' 
+      | _ -> test_guards u' in
+    let test_acts u u' =
+      match List.find_opt (function Action.Assign (v,_) when v=var -> true | _ -> false) acts with
+      | Some a -> (* If the list of actions contains an assignment to [var] then it is used to restrict the domain ... *)
+         test_act u u' a
+      | None -> (* ... else, the domain is restricted by the list of guards *)
+         List.for_all (test_guard u') guards in
+    test_guards u && test_acts u u' in
+  let sub_state s u = s ^ Expr.string_of_value u in
+  let add_states acc (s,vv) = acc @ List.map (function u -> sub_state s u, vv) dom_v in
+  let add_transitions acc ((q,guards,acts,q') as t) =
+      let d2v = List.filter (filter_domain (guards,acts)) (Misc.cart_prod dom_v dom_v) in
+      let guards' = remove_guard guards in
+      let acts' = remove_act acts in
+      acc @ List.map (fun (u,u') -> sub_state q u, guards', acts', sub_state q' u') d2v in
+  let add_itransition (q,acts) = sub_state q ival, remove_act acts in
+  let m' =
+    { m with states = List.fold_left add_states [] m.states; 
+             (* Each state [s] gives a set of states [{q^u | u in domain(v)}] *)
+             trans = List.fold_left add_transitions [] m.trans;
+             itrans = add_itransition m.itrans;
+             vars = List.remove_assoc var m.vars
+    } in
+  if cleaned then clean m' else m'
+
+let defactorize_var ?(cleaned=true) m (v,ty,iv) =
+  match ty with
+  | Types.TyInt (_, _, RgConst r) -> defact ~cleaned m (v,r,iv) 
+  | _ -> raise (Illegal_var_type (v, ty))
+
+let defactorize ~vars ?(cleaned=true) m =
+  let lookup v = try List.assoc v m.vars with Not_found -> raise (Unknown_var v) in
+  let vs = List.map (function (v,iv) -> v, Types.real_type (lookup v), iv) vars in
+  List.fold_left (defactorize_var ~cleaned) m vs
+
 (* Serializing/deserializing fns *)
        
 let to_string m =
