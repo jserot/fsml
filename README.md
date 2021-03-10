@@ -20,6 +20,9 @@ The library provides
 
 * a set of PPX extensions for building values of type `Fsm.t` 
 
+* functions to transforming FSMs (moving output valuations from states to transitions and _vice
+  versa_ and defactorizing wrt. local variables)
+  
 * functions for producing and viewing graphical representations of FSMs in the `.dot` format
 
 * functions for saving and reading FSM representations in files using the JSON format
@@ -45,7 +48,7 @@ let f = [%fsm "
     states: E0, E1;
     inputs: start:bool;
     outputs: s:bool;
-    vars: k:int;
+    vars: k:int<0..4>;
     trans:
       E0 -> E1 when start='1' with k:=0, s:='1';
       E1 -> E1 when k<4 with k:=k+1;
@@ -77,6 +80,45 @@ Here is the result of evaluating `Simul.run ~stop_after:7 ~stim:[%fsm_stim "star
 The C and VHDL code generated for this FSM can be viewed
 [here](https://github.com/jserot/fsml/blob/master/doc/code).
 
+In example above, the `s` output is defined by attaching modifications of this output to the _transitions_ of the FSM. It is
+also possible to attach output valuations to _states_, as illustrated below:
+
+```
+let f = [%fsm "
+    name: gensig_bis;
+    states: E0 with s=`0`, E1 with s=`1`;
+    inputs: start:bool;
+    outputs: s:bool;
+    vars: k:int<0..4>;
+    trans:
+      E0 -> E1 when start='1' with k:=0;
+      E1 -> E1 when k<4 with k:=k+1;
+      E1 -> E0 when k=4;
+    itrans: -> E0;
+    "]
+```
+
+with the corresponding graphical representation :
+
+![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp_bis.png "")
+
+The library provides two functions (`Fsm.mealy_outputs` and `Fsm.moore_outputs`) to automatically
+convert FSM written using one style to the other.
+
+The library also provide a function to "defactorize" a FSM wrt. to one (or several) of its local
+variables, _i.e._ replacing these variables by sets of dedicated states. For example, writing
+
+```
+let f' = Fsm.defactorize ~vars:["k",Expr.Int 0] f 
+```
+
+gives the following FSM :
+
+![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp_defact.png "")
+
+in which states denoted `E0i` (resp. `E1i`) correspond to initial state `E0` (resp. `E1`) and
+value `i` for the removed variable `k`.
+
 Documentation
 -------------
 
@@ -85,7 +127,11 @@ The library API is documented [here](https://jserot.github.io/fsml/index.html)
 Installation
 ------------
 
-Pre-requisites :
+FSML is available as an [OPAM package](https://opam.ocaml.org/packages/fsml).
+
+### Building from source
+
+To build from source, the pre-requisites are :
 
 * `ocaml` (>= 4.10.0) with the following packages installed
   - `dune`
@@ -99,6 +145,8 @@ Download the source tree (`git clone https://github.com/jserot/fsml`).
 From the root of the source tree :
 
 1. `make`
+
+### Running the examples
 
 To try the examples :
 
@@ -121,5 +169,3 @@ buggy. To view the generated `.dot` files, first convert it to the `gif` format 
 dot -T gif -o test.gif test.dot
 xv test.gif
 ```
-
-FSML is also available as an [OPAM package](https://opam.ocaml.org/packages/fsml).
