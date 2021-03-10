@@ -6,6 +6,9 @@
   from state to transitions and _vice versa_
 * optional range attribute for `int` type (ex: `var k: int<0..7>`)
 * added function `Fsm.defactorize` to defactorize an FSM wrt. to local variables (see `examples/ex5`)
+* build now also builds a custom `utop` toplevel (which can be used, for instance, to evaluate the
+  examples in `./examples/*` interactively)
+  
 
 # 0.2.1 (Oct 21, 2020)
 * updated interface for functions `C.write` and `Vhdl.write` 

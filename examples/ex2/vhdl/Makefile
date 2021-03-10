@@ -19,7 +19,7 @@ clean:
 
 clobber: clean
 	\rm -f *~
-	\rm -f fsm_pgcd.vhd
+	\rm -f genimp.vhd
 	\rm -rf html
 
 tb: genimp.vhd tb.vhd

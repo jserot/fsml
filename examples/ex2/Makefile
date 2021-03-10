@@ -15,8 +15,12 @@ run:
 clean: 
 	dune clean
 	\rm -f *.vcd
-	\rm -f test_*.dot
+	\rm -f test*.dot
+	(cd ./c; make clean)
+	(cd ./vhdl; make clean)
 
 clobber: clean
 	\rm -f *~
+	(cd ./c; make clobber)
+	(cd ./vhdl; make clobber)
 

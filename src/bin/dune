@@ -1,0 +1,6 @@
+(executable
+ (name fsml_top)
+ (libraries  compiler-libs.toplevel fsml)
+ (link_flags (-linkall))
+ (modes byte))
+

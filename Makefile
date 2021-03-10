@@ -3,8 +3,12 @@
 all: build
 
 build:
-	dune build src/fsml.cma
-	dune build src/fsml.cmxa
+	dune build src/lib/fsml.cma
+	dune build src/lib/fsml.cmxa
+	dune build src/bin/fsml_top.bc
+
+utop:
+	dune utop src/lib
 
 html: README.md
 	pandoc -t html -o README.html README.md
