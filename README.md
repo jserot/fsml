@@ -100,7 +100,7 @@ let f = [%fsm "
 
 with the corresponding graphical representation :
 
-![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp_bis.png "")
+![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp-bis.png "")
 
 The library provides two functions (`Fsm.mealy_outputs` and `Fsm.moore_outputs`) to automatically
 convert FSM written using one style to the other.
@@ -114,7 +114,7 @@ let f' = Fsm.defactorize ~vars:["k",Expr.Int 0] f
 
 gives the following FSM :
 
-![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp_defact.png "")
+![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp-defact.png "")
 
 in which states denoted `E0i` (resp. `E1i`) correspond to initial state `E0` (resp. `E1`) and
 value `i` for the removed variable `k`.
@@ -146,7 +146,8 @@ From the root of the source tree :
 
 1. `make`
 
-### Running the examples
+Running the examples
+--------------------
 
 To try the examples :
 
