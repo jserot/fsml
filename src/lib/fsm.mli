@@ -28,7 +28,7 @@ type t = {
 exception Unknown_output of string
 
 val mealy_outps : ?outps:string list -> t -> t
-  (** mealy_outps os m] returns the FSM obtained by moving the assignation of outputs
+  (** [mealy_outps os m] returns the FSM obtained by moving the assignation of outputs
       listed in [outps] from states to all incoming transitions. When the [outps] parameter is empty 
       or omitted, the transformation is applied to all outputs occuring in each state. Raises [Unknown_output] if 
       [outps] contains a symbol not declared as output. *)

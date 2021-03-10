@@ -1,6 +1,6 @@
 # Changes
 
-# 0.3.0 (Mar XX, 2021)
+# 0.3.0 (Mar 10, 2021)
 * output valuations can now be added to states (see for inst. `examples/ex{2,3}`)
 * added functions `Fsm.mealy_outps`  and `Fsm.moore_outps` to move output valuations 
   from state to transitions and _vice versa_
