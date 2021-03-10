@@ -14,7 +14,7 @@ run:
 clean: 
 	dune clean
 	\rm -f *.vcd
-	\rm -f test.dot
+	\rm -f test*.dot
 
 clobber: clean
 	\rm -f *~

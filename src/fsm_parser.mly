@@ -175,16 +175,16 @@ const_expr:
 
 type_expr:
   | TYBOOL { Types.TyBool }
-  | TYINT rg=int_range { let sz = Types.SzVar (Types.new_size_var ()) in Types.TyInt (Types.TySigned, sz, rg) }
-  | TYINT sz=int_size { let rg = Types.RgVar (Types.new_range_var ()) in Types.TyInt (Types.TySigned, sz, rg) }
-  | TYUINT sz=int_size { let rg = Types.RgVar (Types.new_range_var ()) in Types.TyInt (Types.TyUnsigned, sz, rg) }
+  | TYINT rg=int_range { let sz = Types.Var (Types.new_attr_var ()) in Types.TyInt (Types.Const Signed, sz, rg) }
+  | TYINT sz=int_size { let rg = Types.Var (Types.new_attr_var ()) in Types.TyInt (Types.Const Signed, sz, rg) }
+  | TYUINT sz=int_size { let rg = Types.Var (Types.new_attr_var ()) in Types.TyInt (Types.Const Unsigned, sz, rg) }
 
 int_size:
-  | (* Nothing *) { Types.SzVar (Types.new_size_var ()) }
-  | LT sz=INT GT { Types.SzConst sz }
+  | (* Nothing *) { Types.Var (Types.new_attr_var ()) }
+  | LT sz=INT GT { Types.Const sz }
 
 int_range:
-  | LT lo=INT DOTDOT hi=INT GT { Types.RgConst {lo=lo;hi=hi} }
+  | LT lo=INT DOTDOT hi=INT GT { Types.Const {lo=lo;hi=hi} }
 
 (* Simulation stimuli *)
 

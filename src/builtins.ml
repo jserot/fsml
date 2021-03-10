@@ -13,18 +13,19 @@
 open Types
 
 let type_arithm () = 
-  let sg = Types.new_type_var () in
-  let sz = Types.new_size_var () in
-  let rg = Types.new_range_var () in
-  { ts_tparams=[]; ts_sparams=[sz]; ts_rparams=[rg];
+  let sg = Types.new_attr_var () in
+  let sz = Types.new_attr_var () in
+  let rg = Types.new_attr_var () in
+  { ts_params={tp_typ=[]; tp_sign=[sg]; tp_size=[]; tp_range=[rg]};
     ts_body=TyArrow
               (TyProduct
-                 [TyInt (TyVar sg, SzVar sz, RgVar rg); TyInt (TyVar sg, SzVar sz, RgVar rg)],
-               TyInt (TyVar sg, SzVar sz, RgVar rg)) }
+                 [TyInt (Var sg, Var sz, Var rg); TyInt (Var sg, Var sz, Var rg)],
+               TyInt (Var sg, Var sz, Var rg)) }
    
 let type_compar () = 
-  let tv = Types.new_type_var () in
-  { ts_tparams=[tv]; ts_sparams=[]; ts_rparams=[]; ts_body=TyArrow (TyProduct [TyVar tv; TyVar tv], TyBool) }
+  let t = Types.new_type_var () in
+  { ts_params={tp_typ=[t]; tp_sign=[]; tp_size=[]; tp_range=[]};
+    ts_body=TyArrow (TyProduct [TyVar t; TyVar t], TyBool) }
 
 exception Unknown_value
         

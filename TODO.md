@@ -1,4 +1,3 @@
-- rewrite types.ml and typing.ml with a polymorphic 'a var type
 - toplevel
 - update doc and web page
 - add precise column position when reporting PPX parse errors 

@@ -137,7 +137,7 @@ let defact ~cleaned m (var,range,ival) =
     test_guards u && test_acts u u' in
   let sub_state s u = s ^ Expr.string_of_value u in
   let add_states acc (s,vv) = acc @ List.map (function u -> sub_state s u, vv) dom_v in
-  let add_transitions acc ((q,guards,acts,q') as t) =
+  let add_transitions acc (q,guards,acts,q') =
       let d2v = List.filter (filter_domain (guards,acts)) (Misc.cart_prod dom_v dom_v) in
       let guards' = remove_guard guards in
       let acts' = remove_act acts in
@@ -153,8 +153,8 @@ let defact ~cleaned m (var,range,ival) =
   if cleaned then clean m' else m'
 
 let defactorize_var ?(cleaned=true) m (v,ty,iv) =
-  match ty with
-  | Types.TyInt (_, _, RgConst r) -> defact ~cleaned m (v,r,iv) 
+  match Types.real_type ty with
+  | Types.TyInt (_, _, Types.Const r) -> defact ~cleaned m (v,r,iv) 
   | _ -> raise (Illegal_var_type (v, ty))
 
 let defactorize ~vars ?(cleaned=true) m =

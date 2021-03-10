@@ -7,7 +7,7 @@ view:
 	$(DOTVIEWER) test.dot
 	$(DOTVIEWER) test_bis.dot
 	$(DOTVIEWER) test_ter.dot
-	$(VCDVIEWER) test.vcd test.gtkw
+	$(VCDVIEWER) test.vcd test.gtkw >/tmp/$(VCDVIEWER).log 2>&1
 
 run: 
 	dune exec ./test.exe
@@ -15,7 +15,7 @@ run:
 clean: 
 	dune clean
 	\rm -f *.vcd
-	\rm -f test.dot
+	\rm -f test_*.dot
 
 clobber: clean
 	\rm -f *~

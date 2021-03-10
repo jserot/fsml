@@ -5,7 +5,7 @@ all: run view
 
 view:
 	$(DOTVIEWER) test.dot
-	$(VCDVIEWER) test.vcd test.gtkw
+	$(VCDVIEWER) test.vcd test.gtkw >/tmp/$(VCDVIEWER).log 2>&1
 
 c:
 	(cd c; make)
@@ -19,7 +19,7 @@ run:
 clean: 
 	dune clean
 	\rm -f *.vcd
-	\rm -f test.dot
+	\rm -f test*.dot
 	(cd c; make clean)
 	(cd vhdl; make clean)
 

@@ -13,28 +13,18 @@
 (** Types *)
 
 type t =
-  | TyInt of t * int_size * int_range (** [t] is for signness *)
+  | TyInt of sign attr * size attr * range attr
   | TyBool
   | TyArrow of t * t  (** Internal use only *)
   | TyProduct of t list  (** Internal use only *)
   | TyVar of t var  (** Internal use only *)
-  | TySigned    (** Phantom type *)
-  | TyUnsigned  (** Phantom type *)
   [@@deriving show {with_path=false}, yojson]
 
-and int_size =
-  | SzConst of int
-  | SzVar of int_size var
+and 'a attr =
+  | Const of 'a
+  | Var of ('a attr) var
   [@@deriving show {with_path=false}, yojson]
 
-and int_range =
-  | RgConst of range
-  | RgVar of int_range var
-  [@@deriving show {with_path=false}, yojson]
-
-and range = { lo: int; hi: int }
-  [@@deriving show {with_path=false}, yojson]
-          
 and 'a var =
   { stamp: string;
     mutable value: 'a value }
@@ -45,23 +35,29 @@ and 'a value =
   | Known of 'a
   [@@deriving show {with_path=false}, yojson]
 
+and sign = Signed | Unsigned [@@deriving show {with_path=false}, yojson]
+and size = int [@@deriving show {with_path=false}, yojson]
+and range = { lo: int; hi: int } [@@deriving show {with_path=false}, yojson]
+          
 type typ_scheme =
-  { ts_tparams: (t var) list;
-    ts_sparams: (int_size var) list;
-    ts_rparams: (int_range var) list;
+  { ts_params: ts_params;
     ts_body: t }
   [@@deriving show {with_path=false}, yojson]
+
+and ts_params = {
+  tp_typ: (t var) list;
+  tp_sign: ((sign attr) var) list;
+  tp_size: ((size attr) var) list;
+  tp_range: ((range attr) var) list;
+  }
 
 (** {2 Builders} *)
 
 val new_type_var: unit -> t var
   (** [new_type_var ()] returns a fresh type variable *)
   
-val new_size_var: unit -> int_size var
-  (** [new_size_var ()] returns a fresh size variable *)
-  
-val new_range_var: unit -> int_range var
-  (** [new_range_var ()] returns a fresh range variable *)
+val new_attr_var: unit -> ('a attr) var
+  (** [new_attr_var ()] returns a fresh type attribute variable *)
   
 val type_int: unit -> t
 
@@ -77,6 +73,7 @@ val unify: t -> t -> unit
 val type_instance: typ_scheme -> t
 
 val real_type: t -> t
+val real_attr: 'a attr -> 'a attr
 
 exception Polymorphic of t
                        

@@ -50,17 +50,14 @@ and int_range = int * int (* lo, hi *)
 
 let vhdl_type_of t =
   let open Types in
-  match t with 
-  | TyBool -> Std_logic
-  | TyInt (sg, SzConst sz, _) ->
-     begin match Types.real_type sg, cfg.use_numeric_std with
-     | TyUnsigned, true -> Unsigned sz
-     | TyUnsigned, false -> Integer (Some (0, Misc.pow2 sz - 1))
-     | _, true -> Signed sz
-     | _, false -> Integer (Some (-Misc.pow2 (sz-1), Misc.pow2 (sz-1) - 1))
-     end
-  | TyInt (_, _, RgConst {lo=lo;hi=hi}) -> Integer (Some (lo,hi))
-  | TyInt (_, _, _) -> Integer None
+  match real_type t, cfg.use_numeric_std with 
+  | TyBool, _ -> Std_logic
+  | TyInt (Const Unsigned, Const sz, _), true -> Unsigned sz
+  | TyInt (Const Unsigned, Const sz, _), false -> Integer (Some (0, Misc.pow2 sz - 1))
+  | TyInt (_, Const sz, _), true -> Signed sz
+  | TyInt (_, Const sz, _), false -> Integer (Some (-Misc.pow2 (sz-1), Misc.pow2 (sz-1) - 1))
+  | TyInt (_, _, Const {lo=lo;hi=hi}), _ -> Integer (Some (lo,hi))
+  | TyInt (_, _, _), _ -> Integer None
   | _ -> failwith ("VHDL backend: illegal type: " ^ Types.to_string t)
 
 type type_mark = TM_Full | TM_Abbr | TM_None [@@warning "-37"]
