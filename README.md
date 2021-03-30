@@ -59,7 +59,7 @@ let f = [%fsm "
 
 Here is its graphical representation, obtained by evaluating `let _ = Dot.view f`:
 
-![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp.png "")
+![](https://github.com/jserot/fsml/blob/master/docs/figs/genimp.png "")
 
 Here is the result of evaluating `Simul.run ~stop_after:7 ~stim:[%fsm_stim "start: 0,'0'; 1,'1'; 2,'0'"] f`:
 
@@ -75,10 +75,10 @@ Here is the result of evaluating `Simul.run ~stop_after:7 ~stim:[%fsm_stim "star
 
 ... and the corresponding generated VCD file, viewed by `gtkwave`:
 
-![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp-wave.png "")
+![](https://github.com/jserot/fsml/blob/master/docs/figs/genimp-wave.png "")
 
 The C and VHDL code generated for this FSM can be viewed
-[here](https://github.com/jserot/fsml/blob/master/doc/code).
+[here](https://github.com/jserot/fsml/blob/master/docs/code).
 
 In example above, the `s` output is defined by attaching modifications of this output to the _transitions_ of the FSM. It is
 also possible to attach output valuations to _states_, as illustrated below:
@@ -100,7 +100,7 @@ let f = [%fsm "
 
 with the corresponding graphical representation :
 
-![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp-bis.png "")
+![](https://github.com/jserot/fsml/blob/master/docs/figs/genimp-bis.png "")
 
 The library provides two functions (`Fsm.mealy_outputs` and `Fsm.moore_outputs`) to automatically
 convert FSM written using one style to the other.
@@ -114,7 +114,7 @@ let f' = Fsm.defactorize ~vars:["k",Expr.Int 0] f
 
 gives the following FSM :
 
-![](https://github.com/jserot/fsml/blob/master/doc/figs/genimp-defact.png "")
+![](https://github.com/jserot/fsml/blob/master/docs/figs/genimp-defact.png "")
 
 in which states denoted `E0i` (resp. `E1i`) correspond to initial state `E0` (resp. `E1`) and
 value `i` for the removed variable `k`.
