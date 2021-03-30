@@ -15,8 +15,7 @@ html: README.md
 
 doc: 
 	dune build @doc
-	rm -rf ../../github.io/fsml
-	cp -r _build/default/_doc/_html ../../github.io/fsml
+	cp -r _build/default/_doc/_html/* ./docs
 
 clean:
 	dune clean
